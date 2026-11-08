@@ -104,6 +104,9 @@ th{background:var(--accent-soft);font-weight:700}
 .tcard .lead{font-size:.82rem;margin:2px 0 6px}
 .tcard .stat{font-family:var(--mono);font-size:.74rem;color:var(--muted);text-align:right;white-space:nowrap}
 .tcard.done .tnum{background:var(--good-soft);color:var(--good)}
+.tcard.star{border:2px solid var(--hl-ink);background:var(--hl);color:var(--hl-ink)}
+.tcard.star .lead,.tcard.star .stat{color:var(--hl-ink)}
+.tcard.star .tnum{background:var(--sheet);color:var(--hl-ink)}
 .plan{margin-top:18px}
 .plan ol{padding-left:1.2em}
 
@@ -179,6 +182,186 @@ th{background:var(--accent-soft);font-weight:700}
   </div>
   <div class="tnav"><button class="btn" id="prevTopic">← Önceki</button><button class="btn" id="nextTopic">Sonraki →</button></div>
 </div>
+
+<article class="topic" data-k="k7" hidden>
+  <div class="eyebrow">⭐ Sınavda çıkacak sorular</div>
+  <h2>Sınav soruları ve model cevaplar</h2>
+  <div class="src">Hocanın verdiği 11 soru. Her sorunun altında sınav kağıdına yazabileceğin bir model cevap var. Hesap soruları için çözümlü bir örnek de ekledim. Bu konuyu bitirince "Bu konunun sorularını çöz" butonuyla 17 alıştırma sorusunu çöz.</div>
+
+  <section>
+    <h3>Soru 1) Aşağıda verilen verileri Min-Max yöntemi ile optimize (normalize) ediniz.</h3>
+    <p><b>Model cevap:</b> Min-Max normalizasyonu her değeri <b>0 ile 1 arasına</b> taşır. En küçük değer 0, en büyük değer 1 olur, diğerleri aralarında oransal olarak yerleşir.</p>
+    <div class="fblock">x′ = (x − min) / (max − min)</div>
+    <p>Farklı bir aralık [a, b] istenirse: <span class="f">x′ = a + (x − min)(b − a) / (max − min)</span></p>
+    <div class="ex"><div class="eyebrow">Çözümlü örnek</div>Veri: 10, 20, 30, 50, 90 → min = 10, max = 90, max − min = 80.
+      <div class="tbl"><table><tr><th>x</th><td>10</td><td>20</td><td>30</td><td>50</td><td>90</td></tr><tr><th>x − 10</th><td>0</td><td>10</td><td>20</td><td>40</td><td>80</td></tr><tr><th>÷ 80</th><td><b>0</b></td><td><b>0.125</b></td><td><b>0.25</b></td><td><b>0.5</b></td><td><b>1</b></td></tr></table></div></div>
+    <ol>
+      <li>Min ve max'ı bul.</li>
+      <li>Aralığı hesapla: max − min.</li>
+      <li>Her değerden min'i çıkar ve aralığa böl.</li>
+      <li>Kontrol et: Sonuçların hepsi 0 ile 1 arasında olmalı. Min 0'a, max 1'e dönüşmeli.</li>
+    </ol>
+    <div class="trap"><b>Dikkat</b>Min-Max <b>aykırı değere çok duyarlıdır</b>. Veriye 1000 gibi bir değer eklenirse max değişir ve diğer bütün değerler 0'a yakın bir yere sıkışır. Aykırı değer varsa z-skoru standardizasyonu daha uygundur.</div>
+  </section>
+
+  <section>
+    <h3>Soru 2) Örneklem türleri nelerdir?</h3>
+    <p><b>Model cevap:</b> Örnekleme yöntemleri iki ana gruba ayrılır.</p>
+    <p><b>A) Olasılıklı (rastgele) örnekleme:</b> Ana kitledeki her birimin seçilme şansı bilinir. Sonuçlar ana kitleye genellenebilir.</p>
+    <div class="tbl"><table>
+      <tr><th>Tür</th><th>Nasıl yapılır</th><th>Örnek</th></tr>
+      <tr><td><b>Basit rastgele</b></td><td>Her birimin seçilme şansı eşittir; kurayla veya rastgele sayılarla seçilir</td><td>500 öğrencilik listeden kurayla 50 kişi</td></tr>
+      <tr><td><b>Sistematik</b></td><td>Liste sıralanır, rastgele bir başlangıçtan sonra her k. birim seçilir (k = N/n)</td><td>Listeden her 10. öğrenci; üretim bandında her 20. ürün</td></tr>
+      <tr><td><b>Tabakalı</b></td><td>Ana kitle homojen alt gruplara (tabakalara) ayrılır, her tabakadan oranına göre rastgele seçim yapılır</td><td>Her bölümden öğrenci sayısıyla orantılı seçim</td></tr>
+      <tr><td><b>Küme</b></td><td>Ana kitle doğal gruplara (kümelere) ayrılır, kümeler rastgele seçilir ve seçilen kümelerdeki bütün birimler alınır</td><td>Rastgele 5 okul seçip bu okullardaki bütün öğrenciler</td></tr>
+      <tr><td><b>Çok aşamalı</b></td><td>Yukarıdaki yöntemler aşama aşama birleştirilir</td><td>Önce il, sonra okul, sonra sınıf seçmek</td></tr>
+    </table></div>
+    <p><b>B) Olasılıksız örnekleme:</b> Seçim rastgele yapılmaz. Daha hızlı ve ucuzdur, ama yanlılık riski taşır ve genellenebilirliği düşüktür.</p>
+    <div class="tbl"><table>
+      <tr><th>Tür</th><th>Nasıl yapılır</th></tr>
+      <tr><td><b>Kolayda (uygun)</b></td><td>Ulaşması kolay olanlar seçilir (kantinde karşılaşılan ilk 50 kişi)</td></tr>
+      <tr><td><b>Kota</b></td><td>Gruplar için kotalar belirlenir, kotalar rastgele olmayan şekilde doldurulur</td></tr>
+      <tr><td><b>Amaçlı (yargısal)</b></td><td>Araştırmacı, amaca uygun gördüğü kişileri seçer (uzmanlar)</td></tr>
+      <tr><td><b>Kartopu</b></td><td>Her katılımcı yeni katılımcılar önerir (ulaşılması zor gruplar)</td></tr>
+    </table></div>
+    <div class="trap"><b>Tabakalı ile küme farkı</b><b>Tabakalı</b> örneklemede <b>her tabakadan</b> birkaç birim seçilir; tabakaların içi homojendir. <b>Küme</b> örneklemesinde ise <b>bazı kümeler</b> seçilir ve bu kümelerdeki <b>herkes</b> alınır; kümeler ana kitlenin küçük bir kopyası gibidir.</div>
+  </section>
+
+  <section>
+    <h3>Soru 3) Verilen veri seti için hangi örnekleme daha uygundur?</h3>
+    <p><b>Model cevap:</b> Hangi yöntemin uygun olduğu veri setinin yapısına bağlıdır. Sınavda önce veri setindeki ipucunu bul, sonra yöntemi seçip gerekçesini yaz.</p>
+    <div class="tbl"><table>
+      <tr><th>Veri setinde bu ipucunu görürsen</th><th>Seç</th><th>Gerekçe</th></tr>
+      <tr><td>Belirgin alt gruplar var (bölüm, cinsiyet, şehir) veya <b>sınıflar dengesiz</b> (%95 / %5)</td><td><b>Tabakalı</b></td><td>Her alt grup örneklemde oranı kadar temsil edilir; küçük gruplar kaybolmaz</td></tr>
+      <tr><td>Ana kitle homojen ve tam bir listesi var</td><td><b>Basit rastgele</b></td><td>En yansız ve en basit yöntem</td></tr>
+      <tr><td>Sıralı bir liste veya akış var (üretim bandı, zaman sırasıyla kayıtlar)</td><td><b>Sistematik</b></td><td>Her k. birimi seçmek pratiktir ve veriyi baştan sona kapsar</td></tr>
+      <tr><td>Birimler coğrafi veya doğal gruplara dağılmış, tam liste yok (okullar, mahalleler)</td><td><b>Küme</b></td><td>Maliyeti ve zamanı düşürür</td></tr>
+    </table></div>
+    <div class="hoca"><b>Veri bilimi bağlantısı</b>Makine öğrenmesinde sınıflar dengesizse (örneğin 950 "sağlam", 50 "arızalı") veri eğitim ve test kümelerine <b>tabakalı</b> olarak bölünür (stratified split). Böylece iki kümede de arızalı oranı %5 kalır. Sınavda veri setinde dengesiz sınıflar varsa cevap büyük ihtimalle <b>tabakalı örnekleme</b>dir.</div>
+  </section>
+
+  <section>
+    <h3>Soru 4) Veri setini nasıl normalize ederiz?</h3>
+    <p><b>Model cevap:</b> Normalizasyon, farklı ölçeklerdeki değişkenleri ortak bir ölçeğe taşımaktır. Örneğin yaş (20–60) ve maaş (10 000–100 000) aynı modele girecekse maaş sayısal olarak yaşı ezer. Üç yaygın yöntem vardır:</p>
+    <div class="tbl"><table>
+      <tr><th>Yöntem</th><th>Formül</th><th>Sonuç</th><th>Ne zaman</th></tr>
+      <tr><td><b>Min-Max</b></td><td><span class="f">(x − min)/(max − min)</span></td><td>0 ile 1 arası</td><td>Aykırı değer yoksa, sınırlı aralık isteniyorsa</td></tr>
+      <tr><td><b>z-skoru (standardizasyon)</b></td><td><span class="f">(x − x̄)/s</span></td><td>Ortalama 0, SS 1</td><td>Gradyan tabanlı yöntemler, kNN, PCA; dağılım normale yakınsa</td></tr>
+      <tr><td><b>Robust ölçekleme</b></td><td><span class="f">(x − medyan)/IQR</span></td><td>Medyan 0</td><td>Aykırı değer çoksa</td></tr>
+    </table></div>
+    <ol>
+      <li>Veriyi incele: aykırı değer ve çarpıklık var mı (histogram, kutu grafik)?</li>
+      <li>Yöntemi seç (yukarıdaki tablo).</li>
+      <li>Gerekli istatistikleri hesapla (min/max veya ortalama/SS).</li>
+      <li>Formülü her değere uygula.</li>
+      <li>Model kurulacaksa bu istatistikleri <b>sadece eğitim verisinden</b> hesapla ve test verisine de aynısını uygula.</li>
+    </ol>
+  </section>
+
+  <section>
+    <h3>Soru 5) Bir sensör veri setinde minimum 10, maksimum 9999 ise aralık çok büyük çıkıyor. İlk yapılacak kontrol nedir?</h3>
+    <p><b>Model cevap:</b> İlk yapılacak şey, verinin <b>aykırı değer ya da hatalı kayıt içerip içermediğini</b> kontrol etmektir. 9999 gibi değerler sensörlerde çoğunlukla gerçek bir ölçüm değil, <b>hata veya eksik veri kodudur</b>.</p>
+    <ul>
+      <li><b>Kutu grafik ve IQR kuralı</b> uygula: Q3 + 1.5·IQR sınırının üstündeki değerler aykırıdır.</li>
+      <li>9999'un kaç kez tekrarlandığına bak. Aynı değerin çok tekrarlanması bir kod olduğunu gösterir.</li>
+      <li>Sensörün fiziksel ölçüm aralığıyla ve birimle karşılaştır.</li>
+      <li>Hatalı kayıtlar eksik veri olarak işaretlenir veya çıkarılır, sonra özet istatistikler yeniden hesaplanır.</li>
+    </ul>
+    <p>Bu kontrol yapılmazsa aralık, ortalama, SS ve Min-Max normalizasyonu bozulur. <b>Aralık, uç değerlere en duyarlı ölçüdür.</b></p>
+  </section>
+
+  <section>
+    <h3>Soru 6) Bessel düzeltmesi nedir?</h3>
+    <p><b>Model cevap:</b> Örneklem varyansı hesaplanırken kareli sapmaların toplamını <b>n yerine n − 1'e</b> bölmeye <b>Bessel düzeltmesi</b> denir.</p>
+    <div class="fblock">s² = Σ(xᵢ − x̄)² / (n − 1)</div>
+    <ul>
+      <li><b>Neden gerekir?</b> Örneklem ortalaması aynı veriden hesaplandığı için değerler kendi ortalamalarına ana kitle ortalamasından daha yakındır. n'e bölersek varyans <b>sistematik olarak küçük</b> tahmin edilir.</li>
+      <li><b>Serbestlik derecesi:</b> Sapmaların toplamı her zaman 0'dır, bu yüzden son sapma diğerlerine bağlıdır. Sadece n − 1 sapma serbesttir. Hocanın örneği: 1, 2, 3 → sapmalar −1, 0, ? → üçüncüsü +1 olmak zorunda.</li>
+      <li><b>Sonuç:</b> n − 1 ile ana kitle varyansının <b>yansız (yanlılıksız) bir tahmini</b> elde edilir. n büyüdükçe fark önemsizleşir.</li>
+      <li>Ana kitlenin tamamı biliniyorsa N'e bölünür, düzeltme gerekmez.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h3>Soru 7) Bir öneri sisteminde kullanıcıların işlem süreleri çok çarpık dağılıyor. Model öncesi özetleme yaparken ortalama yerine hangi iki yaklaşım daha yararlı olabilir?</h3>
+    <p><b>Model cevap:</b></p>
+    <ol>
+      <li><b>Medyan:</b> Ortadaki değer olduğu için birkaç çok uzun işlem süresinden etkilenmez. "Tipik kullanıcı" süresini en iyi o temsil eder. Yayılım için de SS yerine <b>IQR</b> verilir.</li>
+      <li><b>Kırpılmış ortalama:</b> İki uçtan belirli bir yüzde (örneğin %5 veya %10) atılarak hesaplanır. Böylece aykırı değerlerin etkisi azalır ama verinin çoğu kullanılmaya devam eder.</li>
+    </ol>
+    <p><b>Gerekçe:</b> Sağa çarpık dağılımda ortalama, uzun kuyruk tarafına çekilir (ortalama &gt; medyan) ve tipik değeri olduğundan büyük gösterir.</p>
+    <p class="lead">Ek bilgi: Model aşamasında çarpıklığı azaltmak için <b>log dönüşümü</b> de kullanılır. Soru "iki yaklaşım" istediği için medyan ve kırpılmış ortalamayı yazmak en güvenlisi.</p>
+  </section>
+
+  <section>
+    <h3>Soru 8) Kutu grafiği ile ilgili soru</h3>
+    <p>Bu soru hesap (beş sayılı özeti bulup grafiği çizme) veya yorum şeklinde gelebilir. İkisine de hazırlan.</p>
+    <div class="ex"><div class="eyebrow">Çözümlü örnek</div>Veri: 2, 4, 5, 7, 8, 9, 10, 12, 30 (n = 9, sıralı)
+      <ul>
+        <li>Min = 2, Max = 30</li>
+        <li>Q1: konum 0.25 × 10 = 2.5 → (4 + 5)/2 = <b>4.5</b></li>
+        <li>Medyan: konum 5 → <b>8</b></li>
+        <li>Q3: konum 0.75 × 10 = 7.5 → (10 + 12)/2 = <b>11</b></li>
+        <li>IQR = 11 − 4.5 = <b>6.5</b>, 1.5 × IQR = 9.75</li>
+        <li>Alt sınır = 4.5 − 9.75 = −5.25, üst sınır = 11 + 9.75 = <b>20.75</b> → 30 <b>aykırı değerdir</b></li>
+        <li>Çizim: Kutu 4.5'ten 11'e kadar, içinde 8'de bir çizgi. Sol bıyık 2'ye, sağ bıyık sınırın içindeki en büyük değer olan 12'ye kadar uzanır. 30 ayrı bir nokta olarak işaretlenir.</li>
+      </ul></div>
+    <p><b>Kutu grafiği nasıl okunur?</b></p>
+    <ul>
+      <li>Kutunun boyu = IQR = ortadaki %50'nin yayılımı. Kutunun içindeki çizgi medyandır.</li>
+      <li>Medyan kutunun sol (alt) tarafına yakınsa ve sağ bıyık uzunsa dağılım <b>sağa çarpık</b>tır. Tersi durumda sola çarpıktır.</li>
+      <li>Ayrı çizilen noktalar aykırı değerlerdir.</li>
+      <li>Birden fazla grubun kutu grafiği yan yana konursa medyanlar ve yayılımlar kolayca karşılaştırılabilir.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h3>Soru 9) Korelasyon hesaplama ile ilgili soru</h3>
+    <p>Hocanın Soru 01'i ile aynı tipte bir hesap sorusu gelecek. <b>Tabloyu mutlaka kur;</b> puanın çoğu tablodan gelir.</p>
+    <div class="fblock">r = Σ(x − x̄)(y − ȳ) / √[ Σ(x − x̄)² · Σ(y − ȳ)² ]</div>
+    <div class="ex"><div class="eyebrow">Çözümlü örnek</div>X = 2, 4, 6, 8, 10 ve Y = 3, 7, 5, 10, 12 → x̄ = 6, ȳ = 37/5 = 7.4
+      <div class="tbl"><table><tr><th>x</th><th>y</th><th>x−x̄</th><th>y−ȳ</th><th>çarpım</th><th>(x−x̄)²</th><th>(y−ȳ)²</th></tr>
+      <tr><td>2</td><td>3</td><td>−4</td><td>−4.4</td><td>17.6</td><td>16</td><td>19.36</td></tr>
+      <tr><td>4</td><td>7</td><td>−2</td><td>−0.4</td><td>0.8</td><td>4</td><td>0.16</td></tr>
+      <tr><td>6</td><td>5</td><td>0</td><td>−2.4</td><td>0</td><td>0</td><td>5.76</td></tr>
+      <tr><td>8</td><td>10</td><td>2</td><td>2.6</td><td>5.2</td><td>4</td><td>6.76</td></tr>
+      <tr><td>10</td><td>12</td><td>4</td><td>4.6</td><td>18.4</td><td>16</td><td>21.16</td></tr>
+      <tr><th colspan="4">Σ</th><th>42</th><th>40</th><th>53.2</th></tr></table></div>
+      r = 42 / √(40 × 53.2) = 42 / √2128 = 42 / 46.13 ≈ <b>0.91</b></div>
+    <p><b>Yorumu mutlaka yaz:</b> "r ≈ 0.91, yani X ile Y arasında <b>güçlü pozitif doğrusal</b> bir ilişki var: X arttıkça Y de artma eğiliminde. R² = 0.83, yani Y'deki değişkenliğin yaklaşık %83'ü X ile açıklanıyor. Korelasyon nedensellik göstermez."</p>
+    <p>Kovaryans istenirse: Cov = 42 / (5 − 1) = 10.5. Spearman istenirse önce sıraları bul, sonra ρ = 1 − 6Σd² / [n(n² − 1)] formülünü uygula.</p>
+  </section>
+
+  <section>
+    <h3>Soru 10) Grafik yorumlama ile ilgili soru</h3>
+    <p>Bir grafik verilip yorumlaman istenecek. Şu kontrol listesini sırayla uygula ve her maddeyi bir cümleyle yaz:</p>
+    <ol>
+      <li><b>Grafik türü veriye uygun mu?</b> Kategorik veri için çubuk/pasta, sayısal veri için histogram/kutu grafik, ilişki için saçılım, zaman için çizgi grafik.</li>
+      <li><b>Eksenler ve ölçek:</b> y ekseni 0'dan başlıyor mu? Başlamıyorsa ölçek manipülasyonu olabilir. Başlık grafikle uyumlu mu?</li>
+      <li><b>Şekil:</b> Simetrik mi, sağa mı sola mı çarpık? Tek tepeli mi, iki tepeli mi? İki tepe varsa iki alt grup olabilir.</li>
+      <li><b>Merkez ve yayılım:</b> Değerler nerede toplanıyor, ne kadar geniş bir aralığa yayılıyor?</li>
+      <li><b>Aykırı değerler, öbekler, boşluklar</b> var mı?</li>
+      <li><b>Saçılım grafiğiyse:</b> yön (pozitif/negatif), güç (doğruya yakınlık) ve biçim (doğrusal/eğrisel).</li>
+      <li><b>Sonuç cümlesi:</b> Grafik ne söylüyor, ne söylemiyor? Örneğin "ilişki var, ama bu nedensellik göstermez".</li>
+    </ol>
+    <div class="hoca"><b>Hocanın sevdiği örnekler</b>Y ekseni 90'dan başlıyor → ölçek manipülasyonu. 18 kategorili pasta → okunmaz, çubuk kullanılmalı. "Sınıf dengesi" başlığına çizgi grafik → başlık ile grafik türü uyumsuz. Histogramda iki tepe → iki alt grup. Kolesterol için pasta → yanlış, histogram kullanılmalı.</div>
+  </section>
+
+  <section>
+    <h3>Soru 11) Pearson ile Spearman korelasyonu arasındaki farklar nelerdir?</h3>
+    <div class="tbl"><table>
+      <tr><th></th><th>Pearson (r)</th><th>Spearman (ρ)</th></tr>
+      <tr><td>Ölçtüğü ilişki</td><td><b>Doğrusal</b></td><td><b>Monoton</b> (hep artan veya hep azalan, doğrusal olmak zorunda değil)</td></tr>
+      <tr><td>Kullandığı veri</td><td>Ham sayısal değerler</td><td>Değerlerin <b>sıraları</b></td></tr>
+      <tr><td>Ölçme düzeyi</td><td>Aralık ve oran (sayısal)</td><td>Sıralı (ordinal) veriye de uygulanır</td></tr>
+      <tr><td>Aykırı değer</td><td>Çok etkilenir</td><td>Daha dayanıklı</td></tr>
+      <tr><td>Formül</td><td><span class="f">Σ(x−x̄)(y−ȳ)/√[Σ(x−x̄)²Σ(y−ȳ)²]</span></td><td><span class="f">1 − 6Σd²/[n(n²−1)]</span></td></tr>
+      <tr><td>Sorulacak soru</td><td>"Noktalar düz bir çizgi çevresinde mi?"</td><td>"X arttıkça Y hep aynı yönde mi değişiyor?"</td></tr>
+    </table></div>
+    <p><b>Ortak yanları:</b> İkisi de −1 ile +1 arasında değer alır, işaret yönü gösterir, ve ikisi de nedensellik göstermez.</p>
+    <p><b>Hangisini seçmeli?</b> Önce saçılım grafiğine ve ölçme düzeyine bak. Doğrusal ilişki ve sayısal veri varsa <b>Pearson</b>; sıralı veri, aykırı değer veya doğrusal olmayan ama monoton bir ilişki varsa <b>Spearman</b>. Örneğin Y = X² (X &gt; 0) eğrisinde Pearson 1'den küçük çıkar, Spearman ise 1 olur.</p>
+  </section>
+</article>
 
 <article class="topic" data-k="k0" hidden>
   <div class="eyebrow">Konu 0 · Hafta 1–2</div>
@@ -758,6 +941,7 @@ th{background:var(--accent-soft);font-weight:700}
 (function(){
 "use strict";
 const TOPICS=[
+ {k:"k7",n:"⭐",t:"Sınavda çıkacak 11 soru",d:"Hocanın verdiği sorular, model cevaplar ve 17 alıştırma",star:1},
  {k:"k0",n:"0",t:"Temel kavramlar",d:"Ana kitle, örneklem, parametre, değişken türleri, ölçme düzeyleri"},
  {k:"k1",n:"1",t:"Merkezi eğilim",d:"Ortalama, medyan, mod, aralık, kırpılmış ortalama, çarpıklık"},
  {k:"k2",n:"2",t:"Çeyreklik · yüzdelik · IQR",d:"(n+1) kuralı, IQR, aykırı değer, kutu grafik"},
@@ -768,6 +952,24 @@ const TOPICS=[
 ];
 // q: soru, o: şıklar, a: doğru şık indeksi, e: açıklama, h: zor (hocanın YZ tipi)
 const Q=[
+// k7 – sınavda çıkacak sorular
+{k:"k7",q:"Veri: 10, 20, 30, 50, 90. Min-Max normalizasyonundan sonra 50 hangi değere dönüşür?",o:["0.5","0.55","0.625","0.4"],a:0,e:"(x − min)/(max − min) = (50 − 10)/(90 − 10) = 40/80 = <b>0.5</b>."},
+{k:"k7",q:"Aynı veride (10, 20, 30, 50, 90) Min-Max sonrası 30 kaç olur?",o:["0.33","0.25","0.3","0.2"],a:1,e:"(30 − 10)/80 = 20/80 = <b>0.25</b>. Kontrol: 10 → 0, 90 → 1."},
+{k:"k7",q:"Min-Max normalizasyonunda veri setine 1000 gibi aşırı bir değer eklenirse ne olur?",o:["Hiçbir değer değişmez","Max büyür ve diğer bütün değerler 0'a yakın bir yere sıkışır","Değerler 0 ile 100 arasına taşınır","Ortalama 0, SS 1 olur"],a:1,e:"Min-Max aykırı değere <b>çok duyarlıdır</b>. Payda (max − min) çok büyüdüğü için normal değerlerin hepsi 0'a yakın çıkar. Aykırı değer varsa z-skoru veya robust ölçekleme daha uygundur."},
+{k:"k7",q:"Min-Max normalizasyonu ile z-skoru standardizasyonu arasındaki fark nedir?",o:["İkisi aynıdır","Min-Max değerleri 0–1 arasına taşır; z-skoru ortalamayı 0, SS'yi 1 yapar","Min-Max ortalamayı 0 yapar","z-skoru değerleri 0–1 arasına sınırlar"],a:1,e:"Min-Max: <span class='f'>(x−min)/(max−min)</span> → <b>[0, 1]</b>. z-skoru: <span class='f'>(x−x̄)/s</span> → <b>ortalama 0, SS 1</b>; değerler 0–1 aralığıyla sınırlı değildir."},
+{k:"k7",q:"500 kişilik bir listeden rastgele bir başlangıç seçilip her 10. kişinin alınması hangi örneklemedir?",o:["Basit rastgele","Sistematik","Tabakalı","Küme"],a:1,e:"Belirli bir aralıkla (k = 10) seçim yapmak <b>sistematik örneklemedir</b>."},
+{k:"k7",q:"Öğrenciler bölümlerine göre gruplara ayrılıyor ve her bölümden öğrenci sayısıyla orantılı olarak rastgele seçim yapılıyor. Bu hangi örneklemedir?",o:["Küme","Kolayda","Tabakalı","Sistematik"],a:2,e:"Ana kitleyi homojen alt gruplara (tabakalara) ayırıp <b>her tabakadan</b> seçim yapmak <b>tabakalı örneklemedir</b>."},
+{k:"k7",q:"Rastgele 5 okul seçilip bu okullardaki bütün öğrencilerin ankete alınması hangi örneklemedir?",o:["Tabakalı","Küme","Basit rastgele","Kota"],a:1,e:"Doğal gruplar (okullar) rastgele seçilir ve seçilen gruplardaki <b>herkes</b> alınır. Bu <b>küme örneklemesidir</b>."},
+{k:"k7",q:"Kampüste kantinde karşılaşılan ilk 50 kişiye anket yapmak hangi tür örneklemedir?",o:["Basit rastgele (olasılıklı)","Kolayda (olasılıksız)","Sistematik","Tabakalı"],a:1,e:"Ulaşması kolay olanları seçmek <b>kolayda örneklemedir</b>. Olasılıksız bir yöntemdir ve yanlılık riski taşır."},
+{k:"k7",h:1,q:"Bir veri setinde 950 \"sağlam\" ve 50 \"arızalı\" kayıt var. Eğitim ve test kümelerine ayırırken hangi örnekleme daha uygundur?",o:["Kolayda","Tabakalı","Küme","İlk 800 kaydı eğitime almak"],a:1,e:"Sınıflar dengesiz. <b>Tabakalı</b> ayırma ile iki kümede de arızalı oranı %5 olarak korunur; küçük sınıf kaybolmaz (stratified split)."},
+{k:"k7",h:1,q:"Bir sensör veri setinde minimum 10, maksimum 9999. Aralık çok büyük çıkıyor. İlk yapılacak kontrol nedir?",o:["Veriyi hemen Min-Max ile normalize etmek","Aykırı değer veya hatalı kayıt (9999 gibi eksik veri kodu) olup olmadığını kutu grafik/IQR ile kontrol etmek","Ortalamayı hesaplayıp raporlamak","Pasta grafik çizmek"],a:1,e:"9999 gibi değerler sensörlerde çoğunlukla <b>hata veya eksik veri kodudur</b>. Önce aykırı/hatalı kayıt kontrolü yapılır (IQR kuralı, tekrar sayısı, fiziksel sınırlar). Aksi halde aralık, ortalama, SS ve normalizasyon bozulur."},
+{k:"k7",q:"Bessel düzeltmesi nedir?",o:["Varyansı hesaplarken n yerine n+1'e bölmek","Örneklem varyansında n yerine n−1'e bölerek ana kitle varyansını yansız tahmin etmek","Aykırı değerleri silmek","Veriyi 0–1 aralığına taşımak"],a:1,e:"<span class='f'>s² = Σ(x−x̄)²/(n−1)</span>. Sapmaların toplamı 0 olduğu için serbestlik derecesi n−1'dir. n'e bölmek varyansı küçük tahmin eder."},
+{k:"k7",h:1,q:"Kullanıcıların işlem süreleri çok sağa çarpık. Model öncesi özetlemede ortalama yerine hangi iki yaklaşım daha yararlıdır?",o:["Mod ve aralık","Medyan ve kırpılmış ortalama","Ortalama ve varyans","Maksimum ve minimum"],a:1,e:"Çarpık dağılımda ortalama uzun kuyruğa çekilir. <b>Medyan</b> aykırı değerlerden etkilenmez; <b>kırpılmış ortalama</b> uçlardan bir yüzdeyi atarak aykırı etkisini azaltır. Yayılım için IQR kullanılır."},
+{k:"k7",q:"Veri: 2, 4, 5, 7, 8, 9, 10, 12, 30. Hocanın kuralıyla IQR kaçtır?",o:["6.5","8","5.5","28"],a:0,e:"Q1 konumu 2.5 → (4+5)/2 = 4.5. Q3 konumu 7.5 → (10+12)/2 = 11. IQR = 11 − 4.5 = <b>6.5</b>."},
+{k:"k7",q:"Aynı veride (2, 4, 5, 7, 8, 9, 10, 12, 30) 30 aykırı değer midir?",o:["Hayır, çünkü max her zaman bıyığın ucudur","Evet, üst sınır 11 + 1.5×6.5 = 20.75 ve 30 bunun üstünde","Hayır, üst sınır 40","Evet, çünkü 30 ortalamadan büyük"],a:1,e:"1.5 × 6.5 = 9.75 → üst sınır 11 + 9.75 = <b>20.75</b>. 30 &gt; 20.75 olduğu için <b>aykırı değerdir</b>; kutu grafikte ayrı bir nokta olarak çizilir, sağ bıyık 12'de biter."},
+{k:"k7",h:1,q:"Bir kutu grafikte medyan çizgisi kutunun sol tarafına yakın ve sağ bıyık çok uzun. Dağılım nasıldır?",o:["Sola çarpık","Simetrik","Sağa çarpık","Üniform"],a:2,e:"Büyük değerler tarafındaki uzun bıyık ve sola kaymış medyan, kuyruğun <b>büyük değerlere</b> doğru uzandığını gösterir → <b>sağa çarpık</b>."},
+{k:"k7",q:"X = 2, 4, 6, 8, 10 ve Y = 3, 7, 5, 10, 12 için Σ(x−x̄)(y−ȳ) = 42, Σ(x−x̄)² = 40, Σ(y−ȳ)² = 53.2. Pearson r kaçtır?",o:["0.79","0.91","0.84","1.05"],a:1,e:"r = 42 / √(40 × 53.2) = 42 / √2128 = 42 / 46.13 ≈ <b>0.91</b> → güçlü pozitif doğrusal ilişki. r hiçbir zaman 1'den büyük olamaz."},
+{k:"k7",q:"Veri sıralı (ordinal) ve aykırı değer içeriyor. Pearson ile Spearman'dan hangisi daha uygundur, neden?",o:["Pearson; ham değerleri kullandığı için","Spearman; sıraları kullandığı için sıralı veriye uygundur ve aykırı değerlere daha dayanıklıdır","İkisi de kullanılamaz","Pearson; monoton ilişkiyi ölçtüğü için"],a:1,e:"<b>Spearman</b> sıraları kullanır, monoton ilişkiyi ölçer ve aykırı değerlerden daha az etkilenir. Pearson doğrusal ilişki ve sayısal (aralık/oran) veri ister."},
 // k0
 {k:"k0",q:"Bir araştırmada 200 öğrencinin not ortalaması hesaplanıp x̄ = 2.8 bulunuyor. Bu 2.8 değeri nedir?",o:["Parametre","İstatistik","Ana kitle","Değişken"],a:1,e:"Örneklemden hesaplanan sayıya <b>istatistik</b> denir (x̄, s, n). Ana kitleye ait olanlar <b>parametredir</b> (μ, σ, N)."},
 {k:"k0",q:"Hangisi ana kitle (popülasyon) parametresinin gösterimidir?",o:["x̄ ve s","μ ve σ","n ve r","s² ve n"],a:1,e:"Yunan harfleri ana kitleye aittir: μ ortalama, σ standart sapma, N hacim, ρ korelasyon."},
@@ -891,7 +1093,7 @@ function renderHome(){
   TOPICS.forEach(t=>{
     const s=topicStats(t.k);
     const a=document.createElement("a");
-    a.href="#"+t.k; a.className="tcard"+(S.read[t.k]?" done":"");
+    a.href="#"+t.k; a.className="tcard"+(S.read[t.k]?" done":"")+(t.star?" star":"");
     a.innerHTML='<div class="tnum">'+(S.read[t.k]?"✓":t.n)+'</div><div style="min-width:0"><h3>'+t.t+'</h3><div class="lead">'+t.d+'</div><div class="meter"><i style="width:'+(s.total?Math.round(100*s.done/s.total):0)+'%"></i></div></div><div class="stat">'+s.ok+'/'+s.total+'<br>doğru</div>';
     topicList.appendChild(a);
   });
@@ -973,7 +1175,7 @@ let exam=null, timerId=null;
 function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
 function examStart(){
   const by={}; TOPICS.forEach(t=>by[t.k]=shuffle(Q.filter(q=>q.k===t.k)));
-  const want={k0:2,k1:4,k2:4,k3:4,k4:4,k5:3,k6:4};
+  const want={k7:6,k0:1,k1:3,k2:3,k3:3,k4:3,k5:3,k6:3};
   let pick=[]; Object.keys(want).forEach(k=>pick=pick.concat(by[k].slice(0,want[k])));
   exam={qs:shuffle(pick),ans:{},end:Date.now()+40*60000,done:false};
   renderExam(); clearInterval(timerId); timerId=setInterval(tick,1000);
@@ -985,7 +1187,7 @@ function tick(){
   if(left<=0)examFinish();
 }
 function renderExamIntro(){
-  examHost.innerHTML='<div class="sheet"><p>Bütün konulardan karışık <b>25 soru</b> gelir: konu 1–4 ve 6&#39;dan dörder, konu 5&#39;ten üç, konu 0&#39;dan iki soru. Sorular cevaplarken değerlendirilmez; sonuçlar ve açıklamalar sınav bitince gösterilir. Süre <b>40 dakika</b>.</p><p class="lead">Her denemede sorular farklı karışır. Hedef: %90 ve üstü.</p><button class="btn primary" type="button" id="exGo">Sınavı başlat</button></div>';
+  examHost.innerHTML='<div class="sheet"><p>Bütün konulardan karışık <b>25 soru</b> gelir: <b>⭐ sınav sorularından 6</b>, konu 1–6&#39;dan üçer, konu 0&#39;dan bir soru. Sorular cevaplarken değerlendirilmez; sonuçlar ve açıklamalar sınav bitince gösterilir. Süre <b>40 dakika</b>.</p><p class="lead">Her denemede sorular farklı karışır. Hedef: %90 ve üstü.</p><button class="btn primary" type="button" id="exGo">Sınavı başlat</button></div>';
   document.getElementById("exGo").onclick=examStart;
 }
 function renderExam(){
