@@ -1,0 +1,1010 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>İstatistik Sıfırdan İleri</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;1,7..72,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: a single readable column like a textbook; chapters numbered because the order is the learning path */
+:root{
+  --paper:#f4f6f9; --sheet:#ffffff; --ink:#17202b; --muted:#5b6777; --rule:#d7dee7;
+  --accent:#2747c9; --accent-soft:#e2e8ff; --accent2:#c2410c; --accent2-soft:#fde8dc;
+  --hl:#fff0a3; --hl-ink:#574400; --good:#16794c; --good-soft:#dcf2e6; --bad:#c0352b; --bad-soft:#fbe2df;
+  --band1:#2747c9; --band2:#7d92e6; --band3:#c4cef5;
+  --display:"Bricolage Grotesque","Segoe UI",system-ui,sans-serif;
+  --body:"Literata",Georgia,"Times New Roman",serif;
+  --mono:"JetBrains Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#0f141b; --sheet:#171e28; --ink:#e6ecf3; --muted:#97a4b4; --rule:#2a3441;
+  --accent:#8ea7ff; --accent-soft:#1f2a4d; --accent2:#ff9a66; --accent2-soft:#3d2316;
+  --hl:#4a3e10; --hl-ink:#ffe08a; --good:#5fd39a; --good-soft:#153424; --bad:#ff8a80; --bad-soft:#3d1c1a;
+  --band1:#8ea7ff; --band2:#5468b8; --band3:#2b3870; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#0f141b; --sheet:#171e28; --ink:#e6ecf3; --muted:#97a4b4; --rule:#2a3441;
+  --accent:#8ea7ff; --accent-soft:#1f2a4d; --accent2:#ff9a66; --accent2-soft:#3d2316;
+  --hl:#4a3e10; --hl-ink:#ffe08a; --good:#5fd39a; --good-soft:#153424; --bad:#ff8a80; --bad-soft:#3d1c1a;
+  --band1:#8ea7ff; --band2:#5468b8; --band3:#2b3870; color-scheme:dark}
+
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font:18px/1.7 var(--body);
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
+  padding-block:env(safe-area-inset-top,0px) calc(48px + env(safe-area-inset-bottom,0px))}
+main{max-width:740px;margin:0 auto}
+h1,h2,h3,h4{font-family:var(--display);line-height:1.2;text-wrap:balance;margin:0}
+h1{font-size:2.2rem;font-weight:800;letter-spacing:-.015em}
+h2{font-size:1.65rem;font-weight:800;margin:0 0 .3em}
+h3{font-size:1.2rem;font-weight:800;margin:1.6em 0 .4em}
+h4{font-size:1rem;font-weight:600;margin:1.2em 0 .3em}
+p{margin:.55em 0}
+ul,ol{padding-left:1.3em;margin:.5em 0}
+li{margin:.3em 0}
+a{color:var(--accent)}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.progress{position:fixed;top:0;left:0;height:3px;background:var(--accent);width:0;z-index:20}
+header.cover{padding:36px 0 12px}
+.eyebrow{font-family:var(--mono);font-size:.72rem;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+.lead{font-size:1.05rem;color:var(--muted)}
+.toc{background:var(--sheet);border:1px solid var(--rule);border-radius:14px;padding:16px 18px;margin:18px 0}
+.toc ol{margin:0;padding-left:1.4em;columns:1}
+.toc li{margin:.2em 0;font-family:var(--display);font-weight:600;font-size:.98rem}
+.toc a{text-decoration:none}
+.toc span{font-family:var(--body);font-weight:400;color:var(--muted);font-size:.86rem}
+.chapter{background:var(--sheet);border:1px solid var(--rule);border-radius:18px;padding:22px 20px 18px;margin:22px 0;min-width:0}
+.chapter > .eyebrow{color:var(--accent)}
+.chapter .level{display:inline-block;font-family:var(--mono);font-size:.68rem;letter-spacing:.06em;padding:2px 8px;border-radius:99px;background:var(--accent-soft);color:var(--accent);margin-left:6px;vertical-align:2px}
+.f{font-family:var(--mono);font-size:.84em;background:var(--accent-soft);padding:1px 6px;border-radius:5px;white-space:nowrap}
+.formula{font-family:var(--mono);font-size:.98rem;background:var(--accent-soft);border-radius:12px;padding:12px 16px;margin:.8em 0;overflow-x:auto;white-space:nowrap;text-align:center}
+.intuit{border-left:4px solid var(--accent2);background:var(--accent2-soft);border-radius:0 12px 12px 0;padding:10px 14px;margin:.9em 0}
+.intuit b:first-child,.hoca b:first-child,.trap b:first-child,.exam b:first-child{display:block;font-family:var(--mono);font-size:.7rem;letter-spacing:.09em;text-transform:uppercase;margin-bottom:2px}
+.intuit b:first-child{color:var(--accent2)}
+.hoca{background:var(--hl);color:var(--hl-ink);border-radius:12px;padding:10px 14px;margin:.9em 0}
+.trap{border:2px dashed var(--bad);border-radius:12px;padding:10px 14px;margin:.9em 0}
+.trap b:first-child{color:var(--bad)}
+.exam{background:var(--good-soft);border-radius:12px;padding:10px 14px;margin:.9em 0}
+.exam b:first-child{color:var(--good)}
+.step{counter-reset:s;list-style:none;padding-left:0}
+.step li{counter-increment:s;position:relative;padding-left:2.1em}
+.step li::before{content:counter(s);position:absolute;left:0;top:.15em;width:1.5em;height:1.5em;border-radius:50%;background:var(--accent);color:var(--sheet);font:600 .78rem/1.5em var(--mono);text-align:center}
+.tbl{overflow-x:auto;margin:.8em 0}
+table{border-collapse:collapse;width:100%;font-size:.9rem;font-variant-numeric:tabular-nums;font-family:var(--body)}
+th,td{border:1px solid var(--rule);padding:6px 9px;text-align:left;vertical-align:top}
+th{background:var(--accent-soft);font-family:var(--display);font-weight:600}
+td.hlc{background:var(--hl);color:var(--hl-ink);font-weight:600}
+figure{margin:1em 0;background:var(--paper);border:1px solid var(--rule);border-radius:14px;padding:12px 10px 8px}
+figure svg{display:block;width:100%;height:auto;max-width:620px;margin:0 auto}
+figcaption{font-size:.84rem;color:var(--muted);text-align:center;margin-top:6px;font-family:var(--body)}
+pre.mono{font-family:var(--mono);font-size:.95rem;background:var(--paper);border:1px solid var(--rule);border-radius:12px;padding:12px 16px;overflow-x:auto;line-height:1.55}
+details{border:1px solid var(--rule);border-radius:12px;padding:8px 14px;margin:.6em 0;background:var(--paper)}
+details summary{cursor:pointer;font-family:var(--display);font-weight:600;font-size:.98rem}
+details[open] summary{margin-bottom:6px}
+.check h4{margin-top:.6em}
+.top{display:inline-block;margin-top:10px;font-family:var(--mono);font-size:.75rem;text-decoration:none}
+/* svg classes, all theme-aware */
+.ax{stroke:var(--muted);stroke-width:1.2;fill:none}
+.grid{stroke:var(--rule);stroke-width:1;fill:none}
+.t{fill:var(--ink);font:11px var(--mono)}
+.tm{fill:var(--muted);font:10px var(--mono)}
+.tb{fill:var(--ink);font:600 12px var(--display)}
+.dot{fill:var(--accent)}
+.dot2{fill:var(--accent2)}
+.bar{fill:var(--accent)}
+.bar2{fill:var(--accent2)}
+.barS{fill:var(--accent-soft);stroke:var(--accent);stroke-width:1}
+.barH{fill:var(--hl);stroke:var(--hl-ink);stroke-width:1}
+.curve{fill:none;stroke:var(--accent);stroke-width:2.2}
+.area{fill:var(--accent-soft)}
+.mk{stroke-width:2}
+.mk.mean{stroke:var(--accent2)} .mk.med{stroke:var(--good)} .mk.mod{stroke:var(--muted);stroke-dasharray:4 3}
+.lbl.mean{fill:var(--accent2);font:600 11px var(--mono)} .lbl.med{fill:var(--good);font:600 11px var(--mono)} .lbl.mod{fill:var(--muted);font:600 11px var(--mono)}
+.b1{fill:var(--band1)} .b2{fill:var(--band2)} .b3{fill:var(--band3)}
+.sq{fill:var(--accent2-soft);stroke:var(--accent2);stroke-width:1.2}
+.dash{stroke:var(--accent2);stroke-width:1.4;stroke-dasharray:5 4;fill:none}
+.box{fill:var(--accent-soft);stroke:var(--accent);stroke-width:1.6}
+.whisk{stroke:var(--accent);stroke-width:1.6}
+.out{fill:var(--bad)}
+.posq{fill:var(--good-soft)} .negq{fill:var(--bad-soft)}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+@media (max-width:480px){body{font-size:17px}h1{font-size:1.85rem}.chapter{padding:18px 14px 14px}}
+</style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+<main>
+
+<header class="cover">
+  <div class="eyebrow">Olasılık ve İstatistik · Vize hazırlık kitabı</div>
+  <h1>İstatistik: sıfırdan ileri seviyeye</h1>
+  <p class="lead">Hocanın derste anlattığı her şey, en temelden başlayarak sırayla. Her bölüm aynı düzende ilerliyor: önce <b>sezgi</b>, sonra <b>tanım ve formül</b>, ardından hocanın kendi örneğinin <b>adım adım çözümü</b>, bir <b>görsel</b> ve sonda <b>kendini kontrol et</b> soruları. Bölümleri sırayla oku; her bölüm bir öncekinin üstüne kuruluyor.</p>
+  <p class="lead" style="font-size:.92rem">Kutuların anlamı: <span class="f" style="background:var(--accent2-soft)">Sezgi</span> konunun özü · <span class="f" style="background:var(--hl)">Hocanın kuralı</span> derste/slaytta söylenen · <span class="f" style="background:var(--bad-soft)">Tuzak</span> sık yapılan hata · <span class="f" style="background:var(--good-soft)">Sınavda</span> nasıl sorulur</p>
+</header>
+
+<nav class="toc" aria-label="İçindekiler">
+  <div class="eyebrow" style="margin-bottom:6px">İçindekiler</div>
+  <ol>
+    <li><a href="#b1">İstatistiğin dili</a> <span>· ana kitle, örneklem, değişken, ölçme düzeyi</span></li>
+    <li><a href="#b2">Veriyi düzenlemek: frekans tablosu</a> <span>· f, nispi, kümülatif</span></li>
+    <li><a href="#b3">Veriyi görmek: grafikler</a> <span>· çubuk, pasta, dal-yaprak, histogram, ogiv</span></li>
+    <li><a href="#b4">Merkez: ortalama, medyan, mod</a> <span>· kırpılmış, ağırlıklı, çarpıklık</span></li>
+    <li><a href="#b5">Konum: çeyreklikler ve yüzdelikler</a> <span>· hocanın (n+1) kuralı</span></li>
+    <li><a href="#b6">Yayılım I: aralık, IQR, kutu grafik</a> <span>· aykırı değer kuralı</span></li>
+    <li><a href="#b7">Yayılım II: varyans ve standart sapma</a> <span>· n−1 neden?</span></li>
+    <li><a href="#b8">z-puanı, normal dağılım, standardizasyon</a> <span>· 68–95–99.7</span></li>
+    <li><a href="#b9">Frekans tablosundan hesap ve gruplandırılmış medyan</a> <span>· örnek sınav sorusu</span></li>
+    <li><a href="#b10">İki değişken: korelasyon</a> <span>· kovaryans, Pearson, Spearman, R²</span></li>
+    <li><a href="#b11">Hocanın yorum soruları</a> <span>· "veri bilimi / YZ bağlantılı zor soru" tipi</span></li>
+    <li><a href="#b12">Sınav sabahı: formül kartı ve kontrol listesi</a></li>
+  </ol>
+</nav>
+
+<!-- ================= 1 ================= -->
+<section class="chapter" id="b1">
+  <div class="eyebrow">Bölüm 1 <span class="level">TEMEL</span></div>
+  <h2>İstatistiğin dili</h2>
+  <div class="intuit"><b>Sezgi</b>Türkiye'deki bütün üniversite öğrencilerinin ortalama uyku süresini merak ediyorsun. Herkese soramazsın, o yüzden 200 kişiye sorarsın. İstatistik, bu 200 kişiden yola çıkıp bütün öğrenciler hakkında akıllıca konuşmanın bilimidir.</div>
+  <h3>Ana kitle ve örneklem</h3>
+  <ul>
+    <li><b>Ana kitle (popülasyon, evren):</b> Merak ettiğimiz grubun tamamı (bütün öğrenciler). Büyüklüğü <span class="f">N</span>.</li>
+    <li><b>Örneklem (örnek):</b> Gerçekten ölçtüğümüz küçük grup (200 kişi). Büyüklüğü <span class="f">n</span>.</li>
+    <li><b>Betimleyici istatistik:</b> Elimizdeki veriyi tablo, grafik ve ortalama gibi özetlerle anlatmak. <i>Vizenin konusu büyük ölçüde budur.</i></li>
+    <li><b>Çıkarımsal istatistik:</b> Örneklemden ana kitle hakkında genelleme yapmak (ileride güven aralıkları ve testlerle gelecek).</li>
+  </ul>
+  <h3>Parametre ve istatistik</h3>
+  <p>Ana kitleden hesaplanan sayıya <b>parametre</b>, örneklemden hesaplanan sayıya <b>istatistik</b> denir. Gösterimleri farklıdır:</p>
+  <div class="tbl"><table>
+    <tr><th></th><th>Ana kitle (parametre)</th><th>Örneklem (istatistik)</th></tr>
+    <tr><td>Ortalama</td><td>μ (mü)</td><td>x̄ (x-bar)</td></tr>
+    <tr><td>Standart sapma</td><td>σ (sigma)</td><td>s</td></tr>
+    <tr><td>Eleman sayısı</td><td>N</td><td>n</td></tr>
+    <tr><td>Korelasyon</td><td>ρ (rho)</td><td>r</td></tr>
+  </table></div>
+  <div class="hoca"><b>Hocanın kuralı (tahtadan)</b>Tahtaya alt alta "μ, σ, N" ve "x̄, s, n" yazdı. Akılda tutmak kolay: <b>Yunan harfleri ana kitleye</b>, <b>Latin harfleri örnekleme</b> ait.</div>
+  <h3>Değişken ve türleri</h3>
+  <p><b>Değişken</b>, kişiden kişiye değişebilen bir özelliktir: yaş, cinsiyet, boy, harcama, hastalık durumu, hastanede yatış süresi gibi.</p>
+  <div class="tbl"><table>
+    <tr><th>Tür</th><th>Ne demek</th><th>Örnek</th></tr>
+    <tr><td><b>Nitel (kategorik)</b></td><td>Sayıyla ölçülmez, sınıflara ayrılır</td><td>Cinsiyet, kan grubu, hastalık var/yok</td></tr>
+    <tr><td><b>Nicel, kesikli</b></td><td>Sayılabilir değerler alır</td><td>Çocuk sayısı, devamsızlık günü</td></tr>
+    <tr><td><b>Nicel, sürekli</b></td><td>Aralıktaki her değeri alabilir</td><td>Boy 172.5 cm, kolesterol</td></tr>
+  </table></div>
+  <p><b>Bağımsız (açıklayıcı, X)</b> değişken, <b>bağımlı (yanıt, Y)</b> değişkeni açıkladığını düşündüğümüz değişkendir. Örneğin çalışma süresi (X) ve sınav puanı (Y). Bu adlandırma bir neden-sonuç ilişkisi olduğunu kanıtlamaz.</p>
+  <div class="trap"><b>Tuzak</b>Sayıyla yazılan her şey nicel değildir. <b>Forma numarası</b>, posta kodu ve öğrenci numarası kategoriktir; bunların ortalaması anlamsızdır.</div>
+  <h3>Ölçme düzeyleri (hangi hesabı yapabileceğini bu belirler)</h3>
+  <div class="tbl"><table>
+    <tr><th>Düzey</th><th>Özelliği</th><th>Örnek</th><th>Kullanılabilen merkez ölçüsü</th></tr>
+    <tr><td><b>Adlandırma</b> (nominal)</td><td>Sadece "farklı mı" sorusu</td><td>Göz rengi, kan grubu</td><td>Mod</td></tr>
+    <tr><td><b>Sıralama</b> (ordinal)</td><td>Değerler sıralanabilir</td><td>Eğitim düzeyi, memnuniyet (1–5)</td><td>Mod, medyan</td></tr>
+    <tr><td><b>Aralık</b></td><td>Farklar anlamlı, sıfır noktası keyfi</td><td>°C cinsinden sıcaklık</td><td>Mod, medyan, ortalama</td></tr>
+    <tr><td><b>Oran</b></td><td>Gerçek bir sıfır noktası var</td><td>Boy, kilo, gelir, süre</td><td>Hepsi</td></tr>
+  </table></div>
+  <div class="hoca"><b>Hocanın kuralı</b>Hocanın bütün soru slaytlarının altında şu cümle yazıyor: <i>"Karar vermeden önce veri türü, ölçme düzeyi, özet ölçüsü ve grafik türü arasındaki ilişkiyi gerekçelendirin."</i> Yani hoca her soruda şunu soruyor: <b>Bu veri ne tür, bu türe hangi ölçü ve hangi grafik uyar?</b></div>
+  <div class="check"><h4>Kendini kontrol et</h4>
+    <details><summary>1) 200 öğrenciden hesaplanan x̄ = 2.8 bir parametre mi, istatistik mi?</summary><b>İstatistik</b>, çünkü örneklemden hesaplandı.</details>
+    <details><summary>2) °C cinsinden sıcaklık hangi ölçme düzeyindedir?</summary><b>Aralık.</b> Farklar anlamlı, ama 0 °C "sıcaklık yok" demek değil, yani sıfır noktası keyfi.</details>
+    <details><summary>3) Kan grubu için hangi merkez ölçüsü kullanılabilir?</summary>Sadece <b>mod</b>, çünkü kan grubu adlandırma düzeyinde.</details>
+  </div>
+  <a class="top" href="#">↑ başa dön</a>
+</section>
+
+<!-- ================= 2 ================= -->
+<section class="chapter" id="b2">
+  <div class="eyebrow">Bölüm 2 <span class="level">TEMEL</span></div>
+  <h2>Veriyi düzenlemek: frekans tablosu</h2>
+  <div class="intuit"><b>Sezgi</b>11 kişinin yaşını tek tek okumak yerine "21 yaşında 3 kişi var" demek çok daha anlaşılır. Frekans tablosu, ham veriyi "hangi değer kaç kez tekrarlanıyor" sorusuna göre düzenler.</div>
+  <h3>Sütunlar</h3>
+  <ul>
+    <li><b>f (frekans):</b> Değerin kaç kez tekrarlandığı.</li>
+    <li><b>Nispi (göreli) frekans:</b> <span class="f">f / n</span>. Toplamları <b>her zaman 1</b> eder. <b>Yüzde</b> = nispi frekans × 100.</li>
+    <li><b>tf veya F (kümülatif, birikimli frekans):</b> O satıra kadarki frekansların toplamı. Son satır <b>her zaman n</b>'dir.</li>
+  </ul>
+  <h3>Hocanın örneği: 11 kişinin yaşı</h3>
+  <p>Ham veri: 18, 19, 19, 20, 21, 21, 21, 22, 23, 24, 25</p>
+  <div class="tbl"><table>
+    <tr><th>Yaş</th><td>18</td><td>19</td><td>20</td><td class="hlc">21</td><td>22</td><td>23</td><td>24</td><td>25</td></tr>
+    <tr><th>f</th><td>1</td><td>2</td><td>1</td><td class="hlc">3</td><td>1</td><td>1</td><td>1</td><td>1</td></tr>
+    <tr><th>tf</th><td>1</td><td>3</td><td>4</td><td class="hlc">7</td><td>8</td><td>9</td><td>10</td><td>11</td></tr>
+  </table></div>
+  <p>Tablodan hemen görülenler: en çok tekrarlanan yaş <b>21</b> (mod). 6. kişi tf 4'ten 7'ye çıkan satırda olduğu için ortadaki kişi de 21 yaşında (medyan). Bunları Bölüm 4'te ayrıntılı göreceğiz.</p>
+  <h3>Sayısal veri çok çeşitliyse: sınıflar</h3>
+  <p>Değerler çok farklıysa (örneğin 50 öğrencinin puanları) veri <b>sınıf aralıklarına</b> ayrılır: 40–44, 45–49, … gibi.</p>
+  <ul>
+    <li>Sınıflar <b>çakışmamalı</b> ve her değer bir sınıfa düşmeli.</li>
+    <li>Sınıf sayısı genelde <b>5 ile 15</b> arasında seçilir. Sturges kuralı: <span class="f">k ≈ 1 + 3.322·log(n)</span>.</li>
+    <li><b>Gerçek sınırlar:</b> 40–44 ve 45–49 sınıfları arasında boşluk vardır. Bu boşluğun ortası 44.5'tir. Bu yüzden 45–49 sınıfının gerçek sınırları <b>44.5–49.5</b>, genişliği <b>5</b>'tir. Bölüm 9'da bu bilgi çok önemli olacak.</li>
+  </ul>
+  <div class="hoca"><b>Hocanın yorum sorusu</b>Göreli frekanslar 0.25, 0.30 ve 0.20 verilmiş ve başka kategori yok deniyor. Toplam 0.75, yani 1 değil. Bu durumda <b>eksik kategori veya hesap hatası</b> vardır.</div>
+  <div class="check"><h4>Kendini kontrol et</h4>
+    <details><summary>2000 ailenin 700'ünün 2 çocuğu var. Bu grubun nispi frekansı nedir?</summary>700 / 2000 = <b>0.35</b> (%35).</details>
+    <details><summary>Kümülatif frekans tablosunun son satırında ne yazar?</summary>Toplam gözlem sayısı, yani <b>n</b>.</details>
+  </div>
+  <a class="top" href="#">↑ başa dön</a>
+</section>
+
+<!-- ================= 3 ================= -->
+<section class="chapter" id="b3">
+  <div class="eyebrow">Bölüm 3 <span class="level">TEMEL</span></div>
+  <h2>Veriyi görmek: grafikler</h2>
+  <div class="intuit"><b>Sezgi</b>Grafik seçimi tek bir soruya bağlı: <b>verin kategorik mi, sayısal mı?</b> Kategoriler için çubuk ve pasta, sayısal veri için histogram, dal-yaprak ve kutu grafik kullanılır.</div>
+  <div class="tbl"><table>
+    <tr><th>Amaç</th><th>Grafik</th></tr>
+    <tr><td>Kategorileri karşılaştırmak</td><td><b>Çubuk grafik</b></td></tr>
+    <tr><td>Az kategori, bütünün içindeki paylar</td><td><b>Pasta grafik</b></td></tr>
+    <tr><td>Sayısal verinin dağılım şekli</td><td><b>Histogram</b> (küçük veride dal-yaprak veya nokta grafik)</td></tr>
+    <tr><td>Medyan, çeyrekler, aykırı değer</td><td><b>Kutu grafik</b></td></tr>
+    <tr><td>İki sayısal değişkenin ilişkisi</td><td><b>Saçılım grafiği</b></td></tr>
+    <tr><td>Zamana göre değişim</td><td><b>Çizgi grafik</b></td></tr>
+  </table></div>
+
+  <h3>Çubuk grafik</h3>
+  <p>Kategoriler bir eksende yer alır, çubuk yüksekliği frekansı gösterir. Kategoriler arasında doğal bir süreklilik olmadığı için <b>çubuklar arasında boşluk</b> bırakılır.</p>
+  <figure><div id="g-bar"></div><figcaption>Hocanın örneği: bölümlere göre öğrenci sayısı. Kategorik veri olduğu için çubuk grafik kullanılıyor.</figcaption></figure>
+  <div class="trap"><b>Tuzak: ölçek manipülasyonu</b>y ekseni 0 yerine 90'dan başlatılırsa 92 ile 94 arasındaki küçük fark çok büyükmüş gibi görünür. Hoca bunu "ölçek manipülasyonu" diye soruyor.</div>
+  <figure><div id="g-scale"></div><figcaption>Aynı iki değer (92 ve 94): solda eksen 0'dan, sağda 90'dan başlıyor. Sağdaki grafik farkı olduğundan büyük gösteriyor.</figcaption></figure>
+
+  <h3>Pasta grafik</h3>
+  <p>Her kategorinin <b>bütünün ne kadarı</b> olduğunu gösterir. Dilim açısı = <span class="f">oran × 360°</span>. Örneğin %25 → 90°.</p>
+  <figure><div id="g-pie"></div><figcaption>aöf Misal 4–5: tarım işletmelerinin en önemli sorunu. Maliyet %55 (198°), pazar %25 (90°), işgücü %15 (54°), fikrim yok %5 (18°).</figcaption></figure>
+  <ul>
+    <li>Pasta grafik <b>az sayıda kategori</b> ve <b>pay vurgusu</b> için uygundur.</li>
+    <li>18 kategori olursa ya da bazı dilimler %1'in altındaysa okunmaz; bu durumda <b>çubuk grafik veya tablo</b> kullanılır.</li>
+    <li>Küçük farkları karşılaştırmak için de çubuk daha iyidir. Örneğin hurda %3.7 ile yeniden işleme %5.3 arasındaki fark pastada görünmez.</li>
+  </ul>
+
+  <h3>Dal-yaprak grafik</h3>
+  <p>Her sayıyı ikiye ayır: son basamak <b>yaprak</b>, geri kalanı <b>dal</b>. Örneğin 43 → dal 4, yaprak 3.</p>
+  <p>aöf Misal 7, gitar kursundaki yaşlar: 17, 17, 18, 13, 28, 38, 31, 27, 35, 50, 43, 37, 24</p>
+<pre class="mono">Dal | Yaprak (sıralı)
+ 1  | 3 7 7 8
+ 2  | 4 7 8
+ 3  | 1 5 7 8
+ 4  | 3
+ 5  | 0</pre>
+  <p>Grafiği yan çevirirsen bir histogram gibi görünür. <b>Avantajı:</b> Ham veri kaybolmaz; grafikten bütün sayıları geri okuyabilirsin. Histogramda bu mümkün değil.</p>
+
+  <h3>Histogram</h3>
+  <p>Sayısal veri sınıflara ayrılır ve her sınıf için bir kutu çizilir. Kutular <b>bitişiktir</b>, çünkü sayı ekseni süreklidir. Çubuk grafikten temel farkı budur.</p>
+  <figure><div id="g-hist"></div><figcaption>Hocanın tahtaya çizdiği histogram: 50 öğrencinin puanları. Sınıflar 40–44, …, 75–79; frekanslar 3, 5, 7, 10, 11, 8, 4, 2.</figcaption></figure>
+  <ul>
+    <li>Histogramdan dağılımın <b>simetrik mi çarpık mı</b>, <b>tek tepeli mi çok tepeli mi</b> olduğu, verinin nerede yoğunlaştığı ve uç değer olup olmadığı görülür.</li>
+    <li>Dikey eksen frekans yerine nispi frekansla etiketlense de <b>şekil aynı kalır</b>.</li>
+    <li>Histogramda asıl önemli olan <b>alandır</b>. Sınıf genişlikleri farklıysa yükseklik olarak <b>f/h</b> (yoğunluk) kullanılır (Bölüm 9).</li>
+    <li>Sınıf sayısı az olursa dağılım aşırı sadeleşir, çok olursa grafik gürültülü olur.</li>
+  </ul>
+  <div class="hoca"><b>Hocanın yorum sorusu</b>Histogramda <b>iki belirgin tepe</b> varsa veri <b>iki farklı alt gruptan</b> geliyor olabilir. aöf'teki örnek: bir şirkette internet kullanımı sabah ve öğleden sonra iki ayrı tepe yapıyor.</div>
+
+  <h3>Dağılımın şekilleri</h3>
+  <figure><div id="g-shapes"></div><figcaption>Sağa çarpık, simetrik ve sola çarpık dağılımlar. Kuyruğun uzandığı yön çarpıklığın adını verir.</figcaption></figure>
+  <ul>
+    <li><b>Sağa çarpık:</b> Kuyruk büyük değerlere doğru uzar (maaşlar, harcamalar, yatış süresi).</li>
+    <li><b>Simetrik / çan şekilli:</b> Boy, IQ.</li>
+    <li><b>Sola çarpık:</b> Kuyruk küçük değerlere doğru uzar (kolay bir sınavın notları).</li>
+    <li><b>Üniform:</b> Bütün değerler eşit sıklıkta (hilesiz zar).</li>
+  </ul>
+
+  <h3>Birikimli frekans grafiği (ogiv)</h3>
+  <p>Kümülatif frekansları birleştiren çizgidir. Her zaman yükselir ve <b>n</b>'de biter. Grafikte n/2 hizasından okunan değer medyandır.</p>
+  <figure><div id="g-ogive"></div><figcaption>50 öğrencinin puanları için ogiv. 25. kişi (n/2) hizasından aşağı inince medyan ≈ 59.5 okunur.</figcaption></figure>
+  <ul>
+    <li><b>aöf Misal 18, üç profesör:</b> Şahin düşük not veriyor (sağa çarpık) → eğrisi başta <b>dik</b> yükselir. Kartal yüksek not veriyor (sola çarpık) → eğrisi başta <b>yavaş</b>, sonra dik yükselir. Doğan'ın dağılımı simetrik → eğrisi S şeklinde.</li>
+  </ul>
+  <div class="hoca"><b>Hocanın yorum sorusu</b>"Sınıf dengesi" başlıklı bir slayta zaman serisi çizgi grafiği konmuşsa sorun, <b>başlık ile grafik türünün uyumsuz olmasıdır</b>. Sınıf dağılımı için çubuk grafik kullanılır.</div>
+  <div class="check"><h4>Kendini kontrol et</h4>
+    <details><summary>Serum kolesterol değerlerinin dağılımını göstermek için hangi grafik kullanılır?</summary><b>Histogram.</b> Kolesterol sayısal ve süreklidir. Pasta grafik bu durumda hem yanlış hem yanıltıcı olur.</details>
+    <details><summary>Pasta grafikte %15'lik bir dilimin açısı kaç derecedir?</summary>0.15 × 360 = <b>54°</b>.</details>
+    <details><summary>Histogram ile çubuk grafiğin farkı nedir?</summary>Histogram <b>sayısal</b> veriyi <b>bitişik</b> sınıflarla gösterir. Çubuk grafik <b>kategorik</b> veriyi aralarında <b>boşluk</b> olan çubuklarla gösterir.</details>
+  </div>
+  <a class="top" href="#">↑ başa dön</a>
+</section>
+
+<!-- ================= 4 ================= -->
+<section class="chapter" id="b4">
+  <div class="eyebrow">Bölüm 4 <span class="level">TEMEL → ORTA</span></div>
+  <h2>Merkez: ortalama, medyan, mod</h2>
+  <div class="intuit"><b>Sezgi</b>"Tipik değer" ne? Bunu ölçmenin üç yolu var. <b>Ortalama</b> denge noktasıdır, <b>medyan</b> ortadaki kişidir, <b>mod</b> en kalabalık gruptur. Hangisinin doğru olduğu veriye göre değişir.</div>
+
+  <h3>Aritmetik ortalama</h3>
+  <div class="formula">x̄ = Σx / n &nbsp;&nbsp;&nbsp;&nbsp; μ = Σx / N</div>
+  <p>Σ (sigma) "topla" demektir. Bütün değerleri topla ve kaç değer varsa ona böl. Örnek: 4, 8, 6, 2 → 20 / 4 = <b>5</b>.</p>
+
+  <h3>Medyan (ortanca)</h3>
+  <p>Medyan ve ortanca <b>aynı şeyin iki adıdır</b>. Veri sıralandığında ortada kalan değerdir: verinin yarısı ondan küçük, yarısı büyüktür.</p>
+  <ol class="step">
+    <li>Veriyi <b>küçükten büyüğe sırala</b>. En çok bu adım unutuluyor.</li>
+    <li>Konumu bul: <span class="f">(n + 1) / 2</span></li>
+    <li>Konum tam sayıysa (n tek) o sıradaki değeri al. Konum küsuratlıysa (n çift) ortadaki iki değerin ortalamasını al.</li>
+  </ol>
+  <p>n tek örneği: 7, 3, 9, 1, 5 → sıralı hali 1, 3, <b>5</b>, 7, 9 → konum 3 → medyan <b>5</b>.<br>n çift örneği: 2, 8, 4, 6 → sıralı hali 2, <b>4, 6</b>, 8 → konum 2.5 → medyan (4+6)/2 = <b>5</b>.</p>
+
+  <h3>Mod</h3>
+  <p>En sık tekrar eden değer. <b>Kategorik veride kullanılabilen tek merkez ölçüsüdür.</b></p>
+  <ul>
+    <li>Hocanın örneği: Python, R, Python, Excel, Python, R, SQL → mod <b>Python</b>. Bu veride ortalama hesaplamak anlamsız.</li>
+    <li>Frekans tablosunda mod en yüksek frekanslı kategoridir: Uygun 910, Yeniden işleme 53, Hurda 37 → mod <b>Uygun</b>.</li>
+    <li>İki tepeli bir dağılımda iki mod olabilir.</li>
+  </ul>
+
+  <h3>Ortalama aykırı değere hassas, medyan dirençli</h3>
+  <p>5 çalışanın maaşı (bin TL): 20, 22, 25, 28, <b>300</b>.</p>
+  <figure><div id="g-meanmed"></div><figcaption>Tek bir aykırı değer (300) ortalamayı 79'a çekiyor. Medyan 25'te kalıyor ve tipik maaşı çok daha iyi temsil ediyor.</figcaption></figure>
+  <p>aöf Misal 2: {2, 2, 8, 20, 33} → medyan 8, ortalama 13. 33 yerine 58 yazılırsa medyan <b>yine 8</b> kalır, ortalama <b>18</b>'e çıkar.</p>
+
+  <h3>Çarpıklık: ortalama ile medyanın sırası</h3>
+  <figure><div id="g-skew"></div><figcaption>Ortalama (turuncu) her zaman kuyruğun uzandığı tarafa çekilir. Medyan (yeşil) ortada kalır, mod (gri) tepededir.</figcaption></figure>
+  <div class="tbl"><table>
+    <tr><th>Dağılım</th><th>Sıralama</th></tr>
+    <tr><td>Sağa çarpık</td><td>mod &lt; medyan &lt; <b>ortalama</b></td></tr>
+    <tr><td>Simetrik</td><td>mod ≈ medyan ≈ ortalama</td></tr>
+    <tr><td>Sola çarpık</td><td><b>ortalama</b> &lt; medyan &lt; mod</td></tr>
+  </table></div>
+  <div class="hoca"><b>Hocanın kuralı (tahtadan)</b>Hoca tahtaya sağa çarpık bir dağılım çizdi: <b>medyan 2.1, ortalama 5.8</b>. Ortalama medyandan büyükse dağılım sağa çarpıktır.</div>
+  <div class="exam"><b>Sınavda</b>"Ücretlerin medyanı 32 500, ortalaması 38 700. Dağılım hakkında ne söylenir?" → Ortalama &gt; medyan olduğu için <b>sağa çarpık</b>: çoğu kişi düşük ücret alıyor, az sayıda yönetici çok yüksek ücret alıyor.</div>
+
+  <h3>Kırpılmış ortalama</h3>
+  <p>Aykırı değerlerin etkisini azaltmak için iki uçtan eşit sayıda değer atılır, kalanların ortalaması alınır.</p>
+  <ol class="step">
+    <li>Veriyi sırala.</li>
+    <li>Atılacak sayı = <span class="f">oran × n</span>, <b>en yakın tam sayıya yuvarlanır</b>.</li>
+    <li>Bu kadar değeri <b>her iki uçtan ayrı ayrı</b> at, kalanların ortalamasını al.</li>
+  </ol>
+  <p><b>Slayttaki soru (Navidi Example 1.12):</b> 24 asfalt karışımı: 30 75 79 80 80 105 126 138 149 179 179 191 223 232 232 236 240 242 245 247 254 274 384 470</p>
+  <div class="tbl"><table>
+    <tr><th>Ölçü</th><th>Hesap</th><th>Sonuç</th></tr>
+    <tr><td>Ortalama</td><td>Toplam / 24</td><td><b>195.42</b></td></tr>
+    <tr><td>Medyan</td><td>12. ve 13. değer: (191+223)/2</td><td><b>207</b></td></tr>
+    <tr><td>%5 kırpılmış</td><td>0.05×24 = 1.2 → 1; kalan 22 değer</td><td><b>190.45</b></td></tr>
+    <tr><td>%10 kırpılmış</td><td>0.10×24 = 2.4 → 2; kalan 20 değer</td><td><b>186.55</b></td></tr>
+    <tr><td>%20 kırpılmış</td><td>0.20×24 = 4.8 → 5; kalan 14 değer</td><td><b>194.07</b></td></tr>
+  </table></div>
+  <div class="hoca"><b>Hocanın kuralı (tahtadan)</b>Tahtaya "floor(4.8) = 4, ceil(4.8) = 5" yazdı. Kırpmada <b>en yakın tam sayıya</b> yuvarlanır: 4.8 → 5.</div>
+
+  <h3>Ağırlıklı ortalama</h3>
+  <div class="formula">x̄ = (n₁x̄₁ + n₂x̄₂ + …) / (n₁ + n₂ + …)</div>
+  <p>10 piyano öğrencisinin yaş ortalaması 12, 15 keman öğrencisinin 14, 40 gitar öğrencisinin 18 → (120 + 210 + 720) / 65 = <b>16.2</b>. Gruplar farklı büyüklükte olduğu için düz ortalama (14.67) <b>yanlış</b> olur.</p>
+
+  <h3>Hangi ölçü ne zaman?</h3>
+  <div class="tbl"><table>
+    <tr><th>Durum</th><th>Ölçü</th></tr>
+    <tr><td>Kategorik veri</td><td><b>Mod</b></td></tr>
+    <tr><td>Sayısal, simetrik, aykırı değer yok</td><td><b>Ortalama</b></td></tr>
+    <tr><td>Sayısal, aykırı değer var veya çarpık</td><td><b>Medyan</b> (veya kırpılmış ortalama)</td></tr>
+  </table></div>
+  <div class="check"><h4>Kendini kontrol et</h4>
+    <details><summary>24, 3, 10, 5, 8 verisinin ortalaması ve medyanı nedir?</summary>Ortalama 50/5 = <b>10</b>. Sıralı hali 3, 5, 8, 10, 24 → medyan <b>8</b>.</details>
+    <details><summary>12, 15, 11, 20, 18, 14 verisinin medyanı nedir?</summary>Sıralı hali 11, 12, 14, 15, 18, 20 → konum 3.5 → (14+15)/2 = <b>14.5</b>.</details>
+    <details><summary>Model tahmin sürelerinin ortalaması 2 sn, medyanı 0.5 sn. Ne anlama gelir?</summary>Çoğu tahmin hızlı, ama birkaç tahmin çok uzun sürmüş. Dağılım <b>sağa çarpık</b>.</details>
+    <details><summary>2, 4, 5, 6, 7, 8, 9, 10, 12, 40 verisinin %10 kırpılmış ortalaması nedir?</summary>0.1 × 10 = 1 → 2 ve 40 atılır. Kalan 61 / 8 = <b>7.625</b>.</details>
+  </div>
+  <a class="top" href="#">↑ başa dön</a>
+</section>
+
+<!-- ================= 5 ================= -->
+<section class="chapter" id="b5">
+  <div class="eyebrow">Bölüm 5 <span class="level">ORTA</span></div>
+  <h2>Konum: çeyreklikler ve yüzdelikler</h2>
+  <div class="intuit"><b>Sezgi</b>Medyan sıralı veriyi ikiye böler. Aynı fikri genişletirsek: <b>çeyreklikler</b> veriyi dört eşit parçaya, <b>yüzdelikler</b> yüz parçaya böler. "Sınavda 90. yüzdelikteyim" demek, öğrencilerin %90'ından iyi yaptın demektir.</div>
+  <div class="formula">Konum = (p / 100) × (n + 1) &nbsp;&nbsp;·&nbsp;&nbsp; Q1 = P25 &nbsp;·&nbsp; Q2 = P50 = medyan &nbsp;·&nbsp; Q3 = P75</div>
+  <div class="hoca"><b>Hocanın kuralı (çok önemli)</b>
+    <ol class="step" style="margin:.3em 0 0">
+      <li>Veriyi küçükten büyüğe sırala.</li>
+      <li>Konumu hesapla: Q1 için 0.25(n+1), Q3 için 0.75(n+1).</li>
+      <li>Konum <b>tam sayıysa</b> o sıradaki değeri al.</li>
+      <li>Konum <b>küsuratlıysa</b> (3.5 veya 8.4 gibi) <b>alt ve üst komşu değerlerin ortalamasını</b> al. İnterpolasyon yapma.</li>
+    </ol></div>
+  <div class="trap"><b>Tuzak</b>aöf kitabı Q1'i "alt yarının medyanı" olarak hesaplıyor. Excel gibi yazılımlar da interpolasyon yapıp farklı sonuç verebilir (slayttaki örnekte 42.5 yerine 42). Sınavda <b>hocanın kuralını</b> kullan.</div>
+  <h3>Çözümlü örnek 1: 13 kişinin yaşı (Kuartil Soru 1)</h3>
+  <p>Sıralı veri: 10, 12, <b>15, 18</b>, 22, 25, <b>28</b>, 30, 32, <b>35, 40</b>, 42, 45 (n = 13)</p>
+  <div class="tbl"><table>
+    <tr><th></th><th>Konum</th><th>Ne yapılır</th><th>Sonuç</th></tr>
+    <tr><td>Q1</td><td>0.25 × 14 = 3.5</td><td>3. ve 4. değerin ortalaması (15+18)/2</td><td><b>16.5</b></td></tr>
+    <tr><td>Q2</td><td>0.50 × 14 = 7</td><td>7. değer</td><td><b>28</b></td></tr>
+    <tr><td>Q3</td><td>0.75 × 14 = 10.5</td><td>10. ve 11. değerin ortalaması (35+40)/2</td><td><b>37.5</b></td></tr>
+  </table></div>
+  <h3>Çözümlü örnek 2: 40. yüzdelik (slayt)</h3>
+  <p>10, 15, 18, 22, 25, 30, 35, <b>40, 45</b>, 50, 55, 60, 62, 65, 70, 75, 80, 85, 90, 95 (n = 20)</p>
+  <p>Konum = 0.40 × 21 = <b>8.4</b> → 8. değer (40) ile 9. değer (45) arasında → (40 + 45)/2 = <b>42.5</b>.</p>
+  <h3>Çözümlü örnek 3: 75. yüzdelik (slayt)</h3>
+  <p>2, 4, 6, …, 38 (n = 19). Konum = 0.75 × 20 = <b>15</b>, tam sayı → 15. değer = <b>30</b>. Bu değer aynı zamanda Q3'tür.</p>
+  <h3>Yüzdelik sıralaması</h3>
+  <p>Bir değerin yüzdelik sırası = (ondan küçük değer sayısı / n) × 100. aöf örneği: 37 marka içinde Toyota'nın pazar payından düşük olan 26 marka var → 26/37 = <b>%70.3</b>.</p>
+  <div class="check"><h4>Kendini kontrol et</h4>
+    <details><summary>4, 7, 9, 12, 15, 18, 21, 25 (n = 8) için Q1 nedir?</summary>Konum 0.25 × 9 = 2.25 → 2. ve 3. değerin ortalaması (7+9)/2 = <b>8</b>.</details>
+    <details><summary>Aynı veri için Q3 nedir?</summary>Konum 0.75 × 9 = 6.75 → 6. ve 7. değerin ortalaması (18+21)/2 = <b>19.5</b>.</details>
+    <details><summary>Medyan kaçıncı yüzdeliktir?</summary><b>50.</b></details>
+  </div>
+  <a class="top" href="#">↑ başa dön</a>
+</section>
+
+<!-- ================= 6 ================= -->
+<section class="chapter" id="b6">
+  <div class="eyebrow">Bölüm 6 <span class="level">ORTA</span></div>
+  <h2>Yayılım I: aralık, IQR ve kutu grafik</h2>
+  <div class="intuit"><b>Sezgi</b>Ortalaması 70 olan iki sınıf düşün. Birinde herkes 65–75 arası almış, diğerinde notlar 20 ile 100 arasında dağılmış. Ortalama aynı, ama sınıflar çok farklı. <b>Merkez ölçüsü her zaman bir yayılım ölçüsüyle birlikte verilir.</b></div>
+  <figure><div id="g-spread"></div><figcaption>Hocanın slaytındaki fikir: iki grubun ortalaması aynı (50), ama birinin değerleri merkeze yakın, diğerininki geniş bir aralığa saçılmış.</figcaption></figure>
+  <h3>Aralık (gidim)</h3>
+  <div class="formula">Aralık = max − min</div>
+  <p>Hocanın örneği: 18, 21, 22, 24, 25, 60 → 60 − 18 = <b>42</b>. Sadece iki uç değere baktığı için tek bir aykırı değer aralığı çok büyütür. Bu yüzden tek başına zayıf bir ölçüdür.</p>
+  <h3>Çeyrekler açıklığı (IQR)</h3>
+  <div class="formula">IQR = Q3 − Q1</div>
+  <p>Verinin <b>ortadaki %50'sinin</b> yayılımıdır. İki uçtaki %25'lik kısımlar hesaba girmediği için aykırı değerlerden etkilenmez. 13 kişilik yaş örneğinde IQR = 37.5 − 16.5 = <b>21</b>.</p>
+  <h3>Aykırı değer (dışlak) kuralı: 1.5 × IQR</h3>
+  <div class="formula">Alt sınır = Q1 − 1.5·IQR &nbsp;&nbsp;&nbsp; Üst sınır = Q3 + 1.5·IQR</div>
+  <p>Bu sınırların dışında kalan değerler <b>aykırı değer</b> sayılır.</p>
+  <p><b>aöf Misal 5:</b> Q1 = 41.1, Q3 = 101.9, max = 201.7 → IQR = 60.8 → 1.5 × IQR = 91.2 → üst sınır = 193.1. 201.7 bu sınırın üstünde, yani <b>aykırı değer</b>.</p>
+  <h3>Beş sayılı özet ve kutu grafik</h3>
+  <p><b>Beş sayılı özet:</b> Minimum, Q1, Medyan, Q3, Maksimum. Kutu grafik bu beş sayıyı çizer.</p>
+  <figure><div id="g-box"></div><figcaption>Hocanın slaytındaki kutu grafik (24 asfalt karışımı). Q1 ≈ 116, medyan 207, Q3 ≈ 244. Üst sınır ≈ 436 olduğu için 470 aykırı değer olarak ayrı gösteriliyor.</figcaption></figure>
+  <ul>
+    <li><b>Kutu</b> Q1'den Q3'e kadar uzanır, yani boyu IQR'dır. İçindeki çizgi <b>medyandır</b>.</li>
+    <li><b>Bıyıklar</b> sınırların içindeki en uç değerlere kadar uzanır. Sınır dışındaki değerler <b>ayrı nokta</b> olarak çizilir.</li>
+    <li>Medyan kutunun tam ortasında değilse ve bir bıyık daha uzunsa dağılım çarpıktır.</li>
+  </ul>
+  <p>Hesabı kontrol edelim: Q1 konumu 0.25 × 25 = 6.25 → (105+126)/2 = 115.5. Q3 konumu 18.75 → (242+245)/2 = 243.5. IQR = 128 → üst sınır = 243.5 + 192 = 435.5. 470 &gt; 435.5 olduğu için aykırı değer.</p>
+  <div class="hoca"><b>Hocanın yorum soruları</b>Harcama verisinde medyan 200 TL, Q3 450 TL, maksimum 20 000 TL → <b>dağılım sağa uzamış</b>, az sayıda kullanıcı çok yüksek harcama yapıyor.<br>Model hatalarında IQR küçük ama maksimum hata çok büyük → <b>tipik hata düşük, ama bazı gözlemlerde ciddi başarısızlık var</b>.</div>
+  <div class="check"><h4>Kendini kontrol et</h4>
+    <details><summary>Q1 = 3, Q3 = 5 ise aykırı değer sınırları nedir?</summary>IQR = 2, 1.5 × 2 = 3 → alt sınır <b>0</b>, üst sınır <b>8</b>.</details>
+    <details><summary>Beş sayılı özette hangisi yoktur: ortalama mı, medyan mı?</summary><b>Ortalama yoktur.</b> Beş sayılı özet: min, Q1, medyan, Q3, max.</details>
+  </div>
+  <a class="top" href="#">↑ başa dön</a>
+</section>
+
+<!-- ================= 7 ================= -->
+<section class="chapter" id="b7">
+  <div class="eyebrow">Bölüm 7 <span class="level">ORTA → İLERİ</span></div>
+  <h2>Yayılım II: varyans ve standart sapma</h2>
+  <div class="intuit"><b>Sezgi</b>Değerlerin ortalamadan ortalama olarak ne kadar uzakta olduğunu ölçmek istiyoruz. Ama sapmaları doğrudan toplarsak sonuç her zaman <b>0</b> çıkar, çünkü artılar ve eksiler birbirini götürür. Çözüm: sapmaların <b>karesini</b> almak.</div>
+  <h3>Adım adım</h3>
+  <ol class="step">
+    <li>Ortalamayı bul.</li>
+    <li>Her değerden ortalamayı çıkar. Bunlar sapmalardır ve toplamları her zaman 0'dır.</li>
+    <li>Sapmaların karesini al ve topla.</li>
+    <li>Örneklemse <b>n − 1</b>'e, ana kitleyse <b>N</b>'e böl. Sonuç <b>varyanstır</b>.</li>
+    <li>Varyansın karekökünü al. Sonuç <b>standart sapmadır</b>.</li>
+  </ol>
+  <div class="formula">s² = Σ(x − x̄)² / (n − 1) &nbsp;&nbsp;&nbsp; s = √s²</div>
+  <div class="formula">σ² = Σ(x − μ)² / N &nbsp;&nbsp;&nbsp; σ = √σ²</div>
+  <h3>Çözümlü örnek (tahtadan): 2, 4, 6, 8</h3>
+  <figure><div id="g-var"></div><figcaption>Ortalama 5. Her değerin ortalamadan sapması bir kare çiziyor; varyans bu karelerin "ortalama" alanıdır.</figcaption></figure>
+  <div class="tbl"><table>
+    <tr><th>x</th><th>x − x̄</th><th>(x − x̄)²</th></tr>
+    <tr><td>2</td><td>−3</td><td>9</td></tr>
+    <tr><td>4</td><td>−1</td><td>1</td></tr>
+    <tr><td>6</td><td>+1</td><td>1</td></tr>
+    <tr><td>8</td><td>+3</td><td>9</td></tr>
+    <tr><th>Σ</th><th>0</th><th>20</th></tr>
+  </table></div>
+  <p>s² = 20 / (4 − 1) = <b>6.67</b> &nbsp;·&nbsp; s = √6.67 = <b>2.58</b></p>
+  <h3>Neden n − 1? (Bessel düzeltmesi)</h3>
+  <p>Hocanın örneği: 1, 2, 3 → ortalama 2 → sapmalar −1, 0, +1. İlk iki sapmayı biliyorsan (−1 ve 0) üçüncüyü seçemezsin: toplam 0 olmak zorunda olduğu için o <b>+1</b> olmak zorundadır. Yani sadece n − 1 sapma serbesttir. Buna <b>serbestlik derecesi</b> denir.</p>
+  <ul>
+    <li>Örneklemin ortalaması aynı veriden hesaplandığı için değerler kendi ortalamalarına ana kitle ortalamasından daha yakındır. n'e bölersek varyansı <b>sistematik olarak küçük tahmin ederiz</b>.</li>
+    <li>n − 1'e bölmek ana kitle varyansı için <b>yansız (yanlılıksız)</b> bir tahmin verir. Bu düzeltmeye <b>Bessel düzeltmesi</b> denir.</li>
+  </ul>
+  <div class="trap"><b>Tuzak: örneklem mi, evren mi?</b>{1, 6, 3, 8} verisinin ortalaması 4.5, kareli sapmaların toplamı 29.<br>Veri <b>örneklemse</b> s = √(29/3) = <b>3.109</b>. Veri <b>evren (ana kitle)</b> ise σ = √(29/4) = <b>2.693</b>.<br>Soru "evren standart sapması" diyorsa N'e bölersin. Hocanın frekans sorularında evren SS isteniyor.</div>
+  <h3>Birimler ve yorum</h3>
+  <ul>
+    <li>Varyansın birimi <b>karedir</b> (cm², TL²). Standart sapma veriyle <b>aynı birimdedir</b>, bu yüzden yorumlaması daha kolaydır.</li>
+    <li>Hocanın örneği: ortalaması 70 olan iki sınıfta SS 3 ise öğrenciler birbirine yakındır (<b>homojen</b>), SS 20 ise notlar çok dağınıktır (<b>heterojen</b>).</li>
+    <li>Hastanede yatış süresi: A grubunda ortalama 5 gün, SS 0.8; B grubunda ortalama 5 gün, SS 4. A'da süreler birbirine yakın, B'de bazı hastalar çok kısa, bazıları çok uzun kalmış.</li>
+    <li>YZ bağlantısı: Tekrarlanan deneylerde yüksek SS, modelin kararsız olduğunu gösterir.</li>
+  </ul>
+  <h3>Varyasyon (değişim) katsayısı</h3>
+  <div class="formula">VK = s / x̄ × 100</div>
+  <p>Ortalamaları farklı grupların değişkenliğini karşılaştırır. Kızlar: ortalama 45, SS 9 → %20. Erkekler: ortalama 35, SS 7.7 → %22. Mutlak yayılım kızlarda, <b>göreli yayılım erkeklerde</b> daha fazla.</p>
+  <div class="check"><h4>Kendini kontrol et</h4>
+    <details><summary>1, 2, 3 verisinde sapmaların toplamı kaçtır?</summary>−1 + 0 + 1 = <b>0</b>. Sapmaların toplamı her zaman 0'dır.</details>
+    <details><summary>Uzunluk cm ise varyansın birimi nedir?</summary><b>cm²</b></details>
+  </div>
+  <a class="top" href="#">↑ başa dön</a>
+</section>
+
+<!-- ================= 8 ================= -->
+<section class="chapter" id="b8">
+  <div class="eyebrow">Bölüm 8 <span class="level">ORTA → İLERİ</span></div>
+  <h2>z-puanı, normal dağılım ve standardizasyon</h2>
+  <div class="intuit"><b>Sezgi</b>Matematikten 70, fizikten 60 aldın. Hangisinde daha iyisin? Sadece puana bakarak söyleyemezsin; sınıfın ortalamasına ve yayılımına da bakman gerekir. z-puanı farklı ölçekleri karşılaştırılabilir hale getirir.</div>
+  <div class="formula">z = (x − μ) / σ &nbsp;&nbsp;&nbsp;&nbsp; geri dönüş: x = μ + z·σ</div>
+  <p>z, bir değerin ortalamadan <b>kaç standart sapma</b> uzakta olduğunu söyler. z &gt; 0 ise değer ortalamanın üstünde, z &lt; 0 ise altındadır.</p>
+  <p><b>aöf örneği:</b> Kadınların boy ortalaması 166.5 cm, SS 6.5 cm.</p>
+  <ul>
+    <li>179.5 cm → z = (179.5 − 166.5)/6.5 = <b>2</b></li>
+    <li>147 cm → z = (147 − 166.5)/6.5 = <b>−3</b></li>
+    <li>z = −1.6 → x = 166.5 − 1.6 × 6.5 = <b>156.1 cm</b></li>
+  </ul>
+  <h3>Normal dağılım ve 68–95–99.7 kuralı</h3>
+  <figure><div id="g-normal"></div><figcaption>Çan eğrisi. Değerlerin yaklaşık %68'i ±1σ, %95'i ±2σ, %99.7'si ±3σ aralığında.</figcaption></figure>
+  <p>Bu kural sadece <b>simetrik ve çan şekilli</b> dağılımlar için geçerlidir. aöf örneği: test bitirme süresi ortalaması 75 dakika, SS 12 → öğrencilerin %68'i 63–87, %95'i 51–99, %99.7'si 39–111 dakika arasında bitirir.</p>
+  <p><b>Kontrol ipucu:</b> Çan şekilli bir dağılımda SS kabaca aralık/6 ile aralık/4 arasındadır. Aralık 12 ise SS 2 ile 3 arasında beklenir.</p>
+  <h3>Standardizasyon (makine öğrenmesi bağlantısı)</h3>
+  <p>Bütün değerler z'ye çevrilirse yeni ortalama <b>0</b>, yeni SS <b>1</b> olur. Makine öğrenmesinde özellik standardizasyonu böyle yapılır. Gradyan tabanlı yöntemlerde, k-en yakın komşu, PCA ve regularization içeren modellerde çok işe yarar.</p>
+  <h3>Birim değiştirmek ölçüleri nasıl etkiler?</h3>
+  <div class="tbl"><table>
+    <tr><th>İşlem</th><th>Ortalama, medyan</th><th>SS, aralık, IQR</th><th>Varyans</th></tr>
+    <tr><td>Her değere <b>+c</b> eklemek</td><td>+c</td><td><b>değişmez</b></td><td>değişmez</td></tr>
+    <tr><td>Her değeri <b>×c</b> ile çarpmak</td><td>×c</td><td>×c</td><td><b>×c²</b></td></tr>
+  </table></div>
+  <p>Örnekler: Celsius'tan Kelvin'e (+273.16) geçişte SS aynı kalır. Herkese 1000 TL zam yapılırsa ortalama 1000 artar, SS değişmez. Herkese %10 zam yapılırsa ortalama da SS de 1.1 katına çıkar.</p>
+  <div class="check"><h4>Kendini kontrol et</h4>
+    <details><summary>Ortalama 75, SS 12. Değerlerin %95'i hangi aralıkta?</summary>75 ± 2 × 12 = <b>51–99</b>.</details>
+    <details><summary>Her değer 3 ile çarpılırsa varyans ne olur?</summary><b>9 katına</b> çıkar (SS 3 katına çıkar, varyans onun karesi).</details>
+  </div>
+  <a class="top" href="#">↑ başa dön</a>
+</section>
+
+<!-- ================= 9 ================= -->
+<section class="chapter" id="b9">
+  <div class="eyebrow">Bölüm 9 <span class="level">İLERİ · SINAVIN KALBİ</span></div>
+  <h2>Frekans tablosundan hesap ve gruplandırılmış medyan</h2>
+  <div class="intuit"><b>Sezgi</b>Değerler frekans tablosunda verildiyse hepsini tek tek yazmana gerek yok. "21 yaşında 3 kişi" demek, 21'i üç kez toplamak demektir: <b>f·x</b>.</div>
+  <h3>Tablodan ortalama ve evren standart sapması</h3>
+  <div class="formula">x̄ = Σ(f·x) / n &nbsp;&nbsp;&nbsp; σ² = Σ(f·x²)/n − x̄² &nbsp;&nbsp;&nbsp; (kısa formül)</div>
+  <p><b>Hocanın sorusu:</b> 28 öğrencinin devamsızlık günleri. tf ve yüzde sütunlarını doldur; mod, medyan, ortalama ve evren SS'yi hesapla.</p>
+  <div class="tbl"><table>
+    <tr><th>x</th><th>f</th><th>tf</th><th>%</th><th>f·x</th><th>f·x²</th></tr>
+    <tr><td>0</td><td>3</td><td>3</td><td>10.71</td><td>0</td><td>0</td></tr>
+    <tr><td>1</td><td>5</td><td>8</td><td>17.86</td><td>5</td><td>5</td></tr>
+    <tr><td class="hlc">2</td><td class="hlc">8</td><td class="hlc">16</td><td>28.57</td><td>16</td><td>32</td></tr>
+    <tr><td>3</td><td>6</td><td>22</td><td>21.43</td><td>18</td><td>54</td></tr>
+    <tr><td>4</td><td>4</td><td>26</td><td>14.29</td><td>16</td><td>64</td></tr>
+    <tr><td>5</td><td>2</td><td>28</td><td>7.14</td><td>10</td><td>50</td></tr>
+    <tr><th>Σ</th><th>28</th><th></th><th>100</th><th>65</th><th>205</th></tr>
+  </table></div>
+  <ul>
+    <li><b>Ortalama</b> = 65 / 28 = <b>2.32</b></li>
+    <li><b>Medyan:</b> n çift olduğu için 14. ve 15. değerlerin ortalaması. tf 8'den 16'ya çıkıyor, yani 9. ile 16. değerler arası x = 2 → medyan <b>2</b></li>
+    <li><b>Mod</b> = <b>2</b> (en yüksek frekans, f = 8)</li>
+    <li><b>σ²</b> = 205/28 − (2.32)² = 7.32 − 5.39 = <b>1.93</b> → <b>σ = 1.39</b></li>
+  </ul>
+  <p>Diğer soru (11 kişinin yaşı): Σx = 233 → ortalama 21.18, medyan 21, mod 21, Σ(x − x̄)² = 47.64 → σ = √(47.64/11) = <b>2.08</b>.</p>
+
+  <h3>Gruplandırılmış medyan: formül</h3>
+  <div class="formula">Medyan = L + [ (n/2 − F<sub>önceki</sub>) / f<sub>m</sub> ] × h</div>
+  <div class="tbl"><table>
+    <tr><th>Sembol</th><th>Anlamı</th></tr>
+    <tr><td>L</td><td>Ortanca sınıfının <b>gerçek alt sınırı</b> (55–59 sınıfı için <b>54.5</b>)</td></tr>
+    <tr><td>n</td><td>Toplam gözlem sayısı</td></tr>
+    <tr><td>F<sub>önceki</sub></td><td>Ortanca sınıfından <b>önceki</b> birikimli frekans</td></tr>
+    <tr><td>f<sub>m</sub></td><td>Ortanca sınıfının kendi frekansı</td></tr>
+    <tr><td>h</td><td>Sınıf genişliği (54.5–59.5 → <b>5</b>)</td></tr>
+  </table></div>
+  <h3>Çözümlü örnek: 50 öğrenci</h3>
+  <div class="tbl"><table>
+    <tr><th>Puan</th><th>40–44</th><th>45–49</th><th>50–54</th><th class="hlc">55–59</th><th>60–64</th><th>65–69</th><th>70–74</th><th>75–79</th></tr>
+    <tr><td>f</td><td>3</td><td>5</td><td>7</td><td class="hlc">10</td><td>11</td><td>8</td><td>4</td><td>2</td></tr>
+    <tr><td>F</td><td>3</td><td>8</td><td>15</td><td class="hlc">25</td><td>36</td><td>44</td><td>48</td><td>50</td></tr>
+  </table></div>
+  <ol class="step">
+    <li>n/2 = 50/2 = <b>25</b>.</li>
+    <li>F'nin 25'e ilk ulaştığı sınıf <b>55–59</b> → ortanca sınıfı.</li>
+    <li>L = 54.5, F<sub>önceki</sub> = 15, f<sub>m</sub> = 10, h = 5.</li>
+    <li>Medyan = 54.5 + (25 − 15)/10 × 5 = 54.5 + 5 = <b>59.5 puan</b>.</li>
+  </ol>
+  <h3>Formül nereden geliyor? (hocanın slaytı, 49 öğrenci)</h3>
+  <p>Son sınıfta 1 öğrenci azaltılmış: n = 49, F: 3, 8, 15, 25, 36, 44, 48, 49. Ortanca sırası (49+1)/2 = 25 → yine 55–59 sınıfında.</p>
+  <figure><div id="g-gmed"></div><figcaption>Üstte: önceki sınıflarda 15 kişi var, n/2 = 24.5'e ulaşmak için sınıfın içinde 9.5 kişi ilerlemek gerekiyor. Altta: 9.5/10 = %95 → sınıf genişliğinin %95'i = 4.75 puan → 54.5 + 4.75 = 59.25.</figcaption></figure>
+  <p>Yani formül, sınıfın içindeki öğrencilerin puanlara <b>eşit yayıldığını</b> varsayıp <b>doğrusal interpolasyon</b> yapıyor. Tek tek puanlar bilinmediği için sonuç (59.25) yaklaşık bir değerdir.</p>
+
+  <h3>⭐ Hocanın "Örnek Sınav Sorusu": sınıf genişlikleri farklı</h3>
+  <div class="tbl"><table>
+    <tr><th>Puan</th><th>h</th><th>f</th><th>F</th><th>f/h</th><th>orta nokta m</th><th>f·m</th></tr>
+    <tr><td>40–44</td><td>5</td><td>3</td><td>3</td><td>0.6</td><td>42</td><td>126</td></tr>
+    <tr><td>45–54</td><td>10</td><td>8</td><td>11</td><td>0.8</td><td>49.5</td><td>396</td></tr>
+    <tr><td>55–59</td><td>5</td><td>9</td><td>20</td><td class="hlc">1.8</td><td>57</td><td>513</td></tr>
+    <tr><td class="hlc">60–74</td><td>15</td><td class="hlc">18</td><td class="hlc">38</td><td>1.2</td><td>67</td><td>1206</td></tr>
+    <tr><td>75–79</td><td>5</td><td>5</td><td>43</td><td>1.0</td><td>77</td><td>385</td></tr>
+    <tr><td>80–89</td><td>10</td><td>4</td><td>47</td><td>0.4</td><td>84.5</td><td>338</td></tr>
+    <tr><td>90–99</td><td>10</td><td>2</td><td>49</td><td>0.2</td><td>94.5</td><td>189</td></tr>
+    <tr><th>Σ</th><th></th><th>49</th><th></th><th></th><th></th><th>3153</th></tr>
+  </table></div>
+  <ol class="step">
+    <li><b>Ortanca sınıfı:</b> n/2 = 24.5. F = 20'den sonra 38 geliyor → sınıf <b>60–74</b>.</li>
+    <li><b>Değerler:</b> L = 59.5, F<sub>önceki</sub> = 20, f<sub>m</sub> = 18, <b>h = 15</b> (bu sınıf 15 puan genişliğinde, 5 değil).</li>
+    <li><b>Medyan</b> = 59.5 + (24.5 − 20)/18 × 15 = 59.5 + 3.75 = <b>63.25</b>.</li>
+    <li><b>Ortalama</b> (orta noktalarla) = 3153 / 49 ≈ <b>64.35</b>.</li>
+  </ol>
+  <div class="trap"><b>Tuzak: en kalabalık sınıf hangisi?</b>En yüksek frekans 60–74 sınıfında (18). Ama bu sınıf 15 puan genişliğinde. Birim başına yoğunluğa (f/h) bakınca en yoğun sınıf <b>55–59</b> çıkıyor (1.8). Histogram çizilecekse yükseklik olarak <b>f/h</b> kullanılır, çünkü histogramda alan frekansı temsil eder.</div>
+  <figure><div id="g-unequal"></div><figcaption>Solda yanlış çizim (yükseklik = f): geniş sınıf olduğundan büyük görünüyor. Sağda doğru çizim (yükseklik = f/h): alanlar frekanslarla orantılı.</figcaption></figure>
+  <div class="check"><h4>Kendini kontrol et</h4>
+    <details><summary>45–49 sınıfının gerçek alt sınırı nedir?</summary><b>44.5</b></details>
+    <details><summary>Örnek sınav sorusunda h neden 15 alınıyor?</summary>60–74 sınıfının gerçek sınırları 59.5–74.5, yani genişliği 74.5 − 59.5 = <b>15</b>.</details>
+  </div>
+  <a class="top" href="#">↑ başa dön</a>
+</section>
+
+<!-- ================= 10 ================= -->
+<section class="chapter" id="b10">
+  <div class="eyebrow">Bölüm 10 <span class="level">İLERİ</span></div>
+  <h2>İki değişken: korelasyon</h2>
+  <div class="intuit"><b>Sezgi</b>Çok çalışan öğrenciler daha yüksek puan alıyor mu? İki değişkenin <b>birlikte</b> nasıl değiştiğini ölçmek istiyoruz. Bunun için önce bir saçılım grafiği çizilir, sonra bu ilişki tek bir sayıyla (r) özetlenir.</div>
+  <h3>Saçılım grafiği ve korelasyonun üç boyutu</h3>
+  <figure><div id="g-scatter"></div><figcaption>Pozitif, negatif, ilişkisiz ve U şeklindeki (doğrusal olmayan) ilişki.</figcaption></figure>
+  <ul>
+    <li><b>Yön:</b> Pozitif (birlikte artarlar) veya negatif (biri artarken diğeri azalır).</li>
+    <li><b>Güç:</b> Noktalar bir doğruya ne kadar yakınsa ilişki o kadar güçlüdür.</li>
+    <li><b>Biçim:</b> Doğrusal (<span class="f">Y ≈ a + bX</span>) veya eğrisel. Doğrusallık tek bir sayıdan değil, <b>grafikten</b> anlaşılır.</li>
+  </ul>
+  <div class="formula">−1 ≤ r ≤ +1</div>
+
+  <h3>Kovaryans: işin mantığı</h3>
+  <div class="formula">Cov(X,Y) = Σ(x − x̄)(y − ȳ) / (n − 1)</div>
+  <figure><div id="g-quad"></div><figcaption>Ortalama çizgileri grafiği dört bölgeye ayırır. Yeşil bölgelerdeki noktalar (ikisi de ortalamanın üstünde ya da ikisi de altında) çarpıma <b>pozitif</b>, kırmızı bölgelerdekiler <b>negatif</b> katkı yapar.</figcaption></figure>
+  <ul>
+    <li>Kovaryansın <b>işareti</b> yönü gösterir. Ama büyüklüğü <b>ölçü birimine bağlıdır</b> (cm yerine m kullanırsan sayı değişir). Bu yüzden karşılaştırmaya uygun değildir.</li>
+    <li>Çözüm: Kovaryansı iki değişkenin standart sapmasına bölmek. Böylece birimsiz bir sayı elde edilir: <b>korelasyon</b>.</li>
+  </ul>
+  <div class="formula">r = Cov(X,Y) / (sₓ · s<sub>y</sub>)</div>
+
+  <h3>Pearson r: elle hesap</h3>
+  <div class="formula">r = Σ(x − x̄)(y − ȳ) / √[ Σ(x − x̄)² · Σ(y − ȳ)² ]</div>
+  <p><b>Hocanın Soru 01'i:</b> X = {1, 2, 3, 4, 5}, Y = {2, 3, 5, 4, 6}. x̄ = 3, ȳ = 4.</p>
+  <div class="tbl"><table>
+    <tr><th>x</th><th>y</th><th>x−3</th><th>y−4</th><th>çarpım</th><th>(x−3)²</th><th>(y−4)²</th></tr>
+    <tr><td>1</td><td>2</td><td>−2</td><td>−2</td><td>4</td><td>4</td><td>4</td></tr>
+    <tr><td>2</td><td>3</td><td>−1</td><td>−1</td><td>1</td><td>1</td><td>1</td></tr>
+    <tr><td>3</td><td>5</td><td>0</td><td>1</td><td>0</td><td>0</td><td>1</td></tr>
+    <tr><td>4</td><td>4</td><td>1</td><td>0</td><td>0</td><td>1</td><td>0</td></tr>
+    <tr><td>5</td><td>6</td><td>2</td><td>2</td><td>4</td><td>4</td><td>4</td></tr>
+    <tr><th colspan="4">Σ</th><th>9</th><th>10</th><th>10</th></tr>
+  </table></div>
+  <p>r = 9 / √(10 × 10) = <b>0.90</b> → güçlü pozitif doğrusal ilişki. Kovaryans = 9/4 = 2.25.</p>
+  <p><b>İkinci slayt örneği:</b> 5 öğrencinin matematik (95, 88, 79, 70, 60; x̄ = 78.4) ve fizik (84, 92, 75, 58, 65; ȳ = 74.8) notları. Σ çarpım = 639.40, Σx² = 777.20, Σy² = 758.80 → r = 639.40 / √(777.20 × 758.80) = 639.40 / 767.94 = <b>0.833</b>.</p>
+  <h3>r'nin özellikleri</h3>
+  <ul>
+    <li><b>Birimsizdir.</b> Birim değiştirmek (cm → m) r'yi değiştirmez.</li>
+    <li>X ile Y'nin yeri değişse <b>r aynı kalır</b>.</li>
+    <li>Değişkenlerden biri sabitse (bütün değerleri aynıysa) r <b>tanımsızdır</b>.</li>
+    <li>Aykırı değerlerden <b>çok etkilenir</b>.</li>
+    <li>İşaret yönü, |r| gücü gösterir. Hocanın notu: zayıf/orta/güçlü için evrensel sınırlar yoktur.</li>
+  </ul>
+  <div class="tbl"><table>
+    <tr><th>−1</th><th>≈ −0.7</th><th>0</th><th>≈ +0.7</th><th>+1</th></tr>
+    <tr><td>kusursuz negatif</td><td>negatif eğilim</td><td>doğrusal eğilim yok</td><td>pozitif eğilim</td><td>kusursuz pozitif</td></tr>
+  </table></div>
+  <h3>r = 0, ilişki yok demek değildir</h3>
+  <figure><div id="g-u"></div><figcaption>X: −3…3, Y = X². Noktalar kesin bir eğri üzerinde, ama Pearson r = 0. Doğrusal ilişki yok, ama ilişki var.</figcaption></figure>
+  <h3>Spearman sıra korelasyonu (ρ)</h3>
+  <div class="formula">ρ = 1 − 6Σd² / [ n(n² − 1) ]</div>
+  <p>Ham değerler yerine <b>sıraları</b> kullanır. <b>Monoton</b> ilişkileri (hep artan veya hep azalan, doğrusal olmak zorunda değil) ölçer. dᵢ, her gözlemin iki sıralaması arasındaki farktır.</p>
+  <div class="tbl"><table>
+    <tr><th>Öğrenci</th><th>Matematik sırası</th><th>Fizik sırası</th><th>d</th><th>d²</th></tr>
+    <tr><td>A</td><td>1</td><td>2</td><td>−1</td><td>1</td></tr>
+    <tr><td>B</td><td>2</td><td>1</td><td>1</td><td>1</td></tr>
+    <tr><td>C</td><td>3</td><td>3</td><td>0</td><td>0</td></tr>
+    <tr><td>D</td><td>4</td><td>5</td><td>−1</td><td>1</td></tr>
+    <tr><td>E</td><td>5</td><td>4</td><td>1</td><td>1</td></tr>
+    <tr><th colspan="4">Σd²</th><th>4</th></tr>
+  </table></div>
+  <p>ρ = 1 − (6 × 4) / (5 × 24) = 1 − 24/120 = <b>0.80</b>.</p>
+  <div class="tbl"><table>
+    <tr><th></th><th>Pearson r</th><th>Spearman ρ</th></tr>
+    <tr><td>Neyi ölçer</td><td>Doğrusal ilişki</td><td>Monoton ilişki</td></tr>
+    <tr><td>Kullandığı veri</td><td>Ham sayılar</td><td>Sıralar (sıralı veri için uygun)</td></tr>
+    <tr><td>Aykırı değer</td><td>Çok etkilenir</td><td>Daha dayanıklı</td></tr>
+    <tr><td>Sorulacak soru</td><td>"Noktalar düz bir çizgi çevresinde mi?"</td><td>"X arttıkça Y hep aynı yönde mi değişiyor?"</td></tr>
+  </table></div>
+  <p>Eşit (bağlı) sıralar varsa kısa formül yerine sıralar üzerinden Pearson hesaplanır. Spearman da U şeklindeki bir ilişkiyi yakalayamaz.</p>
+  <h3>R² (belirleme katsayısı)</h3>
+  <div class="formula">R² = r² &nbsp;&nbsp;→&nbsp;&nbsp; r = 0.80 ⇒ R² = 0.64</div>
+  <p>R², Y'deki toplam değişkenliğin <b>yüzde kaçının</b> X ile kurulan doğrusal regresyon modeli tarafından açıklandığını gösterir. r = 0.80 ise bu oran <b>%64</b>'tür. Korelasyon ilişkiyi özetler; regresyon ise Y'yi X'ten <b>tahmin eden</b> bir doğru kurar.</p>
+  <div class="trap"><b>Tuzak</b>r = 0.6, r = 0.3'ün iki katıdır, ama R² değerleri %36 ve %9'dur, yani <b>dört kat</b>. Ayrıca r² nedensel bir etkiyi göstermez.</div>
+  <div class="trap"><b>En önemli kural</b>Korelasyon <b>nedensellik değildir</b>. Dondurma satışı ile boğulma olayları birlikte artar, ama ikisinin de nedeni sıcak havadır. Buna <b>sahte korelasyon</b>, arkadaki değişkene <b>gizli değişken</b> denir.</div>
+  <div class="check"><h4>Kendini kontrol et</h4>
+    <details><summary>n = 6, Σd² = 10 ise Spearman ρ nedir?</summary>1 − 60/(6 × 35) = 1 − 60/210 = <b>0.714</b></details>
+    <details><summary>r = −0.85 nasıl yorumlanır?</summary><b>Güçlü negatif doğrusal ilişki:</b> biri artarken diğeri azalma eğiliminde. Neden-sonuç çıkarılamaz.</details>
+    <details><summary>Kovaryans neden karşılaştırmaya uygun değildir?</summary>Büyüklüğü <b>ölçü birimine bağlıdır</b>. Korelasyon ise birimsizdir.</details>
+  </div>
+  <a class="top" href="#">↑ başa dön</a>
+</section>
+
+<!-- ================= 11 ================= -->
+<section class="chapter" id="b11">
+  <div class="eyebrow">Bölüm 11 <span class="level">SINAV FORMATI</span></div>
+  <h2>Hocanın yorum soruları</h2>
+  <p>Hocanın slaytlarında <b>"Veri bilimi / YZ bağlantılı zor soru"</b> başlıklı 4 şıklı sorular var. Bu sorularda hesap yok; soru, kavramı doğru yorumlayıp yorumlayamadığını ölçüyor. Hepsinin mantığı aynı: <b>verilen ölçü ne söyler, ne söylemez?</b></p>
+  <div class="tbl"><table>
+    <tr><th>Durum</th><th>Doğru cevap</th></tr>
+    <tr><td>Modelin en sık tahmin ettiği sınıf "başarısız"</td><td>Mod, modelin çoğunlukla bu sınıfı ürettiğini söyler; <b>doğruluğu söylemez</b></td></tr>
+    <tr><td>Öneri sisteminde öneriler tek ürüne yığılıyor</td><td>Sistem <b>çeşitlilik üretmiyor</b> olabilir (popülerlik yanlılığı)</td></tr>
+    <tr><td>Medyan 200, Q3 450, max 20 000 TL</td><td>Dağılım <b>sağa uzamış</b>, az sayıda çok yüksek harcayan kullanıcı var</td></tr>
+    <tr><td>Hatalarda IQR küçük, max hata çok büyük</td><td>Tipik hata düşük, ama <b>bazı gözlemlerde ciddi başarısızlık</b> var</td></tr>
+    <tr><td>Göreli frekanslar 0.25 + 0.30 + 0.20</td><td>Toplam 1 değil → <b>eksik kategori veya hesap hatası</b></td></tr>
+    <tr><td>"Sınıf dengesi" başlığına zaman serisi çizgi grafiği konmuş</td><td><b>Başlık ile grafik türü uyumsuz</b></td></tr>
+    <tr><td>y ekseni 90'dan başlıyor, 92–94 farkı dev gibi görünüyor</td><td><b>Ölçek manipülasyonu</b></td></tr>
+    <tr><td>12 sınıflı hedef değişken, bazı sınıflar %1'in altında, pasta grafik</td><td>Çok sayıda küçük dilim <b>okunabilirliği bozar</b></td></tr>
+    <tr><td>Sınıf oranları anlatılırken pasta ne zaman kabul edilir?</td><td><b>Az kategori</b> varsa ve <b>toplam içindeki pay</b> vurgulanıyorsa</td></tr>
+    <tr><td>Histogramda iki belirgin tepe</td><td>Veri <b>iki farklı alt gruptan</b> geliyor olabilir</td></tr>
+    <tr><td>Ortalama 2 sn, medyan 0.5 sn</td><td><b>Sağa çarpık</b>: çoğu hızlı, birkaç tanesi çok uzun</td></tr>
+    <tr><td>Tekrarlanan deneylerde yüksek SS</td><td>Model <b>kararsız</b> olabilir</td></tr>
+  </table></div>
+  <div class="exam"><b>Strateji</b>Yanlış şıklar genellikle "her zaman", "kesinlikle", "kesin olarak verir" gibi aşırı iddialar içerir (örneğin "medyan her zaman moddan küçüktür", "veri kesinlikle hatalıdır"). İstatistik ölçüleri bir <b>olasılığa işaret eder</b>; kesin hüküm vermez. Doğru şık genellikle "olabilir" diye biten temkinli şıktır.</div>
+  <a class="top" href="#">↑ başa dön</a>
+</section>
+
+<!-- ================= 12 ================= -->
+<section class="chapter" id="b12">
+  <div class="eyebrow">Bölüm 12 <span class="level">SINAV SABAHI</span></div>
+  <h2>Formül kartı ve kontrol listesi</h2>
+  <div class="tbl"><table>
+    <tr><th>Ne</th><th>Formül</th></tr>
+    <tr><td>Ortalama</td><td><span class="f">Σx/n</span> · tablodan <span class="f">Σfx/n</span></td></tr>
+    <tr><td>Medyan konumu</td><td><span class="f">(n+1)/2</span> (önce sırala)</td></tr>
+    <tr><td>Çeyreklik / yüzdelik</td><td><span class="f">(p/100)(n+1)</span>, küsuratlıysa iki komşunun ortalaması</td></tr>
+    <tr><td>Kırpılmış ortalama</td><td><span class="f">oran×n</span> → yuvarla → her iki uçtan at</td></tr>
+    <tr><td>Ağırlıklı ortalama</td><td><span class="f">Σnᵢx̄ᵢ / Σnᵢ</span></td></tr>
+    <tr><td>Aralık, IQR</td><td><span class="f">max − min</span>, <span class="f">Q3 − Q1</span></td></tr>
+    <tr><td>Aykırı değer sınırları</td><td><span class="f">Q1 − 1.5·IQR</span>, <span class="f">Q3 + 1.5·IQR</span></td></tr>
+    <tr><td>Örneklem varyansı</td><td><span class="f">s² = Σ(x−x̄)²/(n−1)</span></td></tr>
+    <tr><td>Evren varyansı</td><td><span class="f">σ² = Σ(x−μ)²/N</span> · tablodan <span class="f">Σfx²/n − x̄²</span></td></tr>
+    <tr><td>Varyasyon katsayısı</td><td><span class="f">s/x̄ × 100</span></td></tr>
+    <tr><td>z-puanı</td><td><span class="f">(x−μ)/σ</span> · geri dönüş <span class="f">μ + zσ</span></td></tr>
+    <tr><td>Ampirik kural</td><td>±1σ %68 · ±2σ %95 · ±3σ %99.7</td></tr>
+    <tr><td>Gruplandırılmış medyan</td><td><span class="f">L + [(n/2 − F<sub>ö</sub>)/f<sub>m</sub>]·h</span></td></tr>
+    <tr><td>Pasta açısı · nispi frekans</td><td><span class="f">oran×360°</span> · <span class="f">f/n</span></td></tr>
+    <tr><td>Kovaryans</td><td><span class="f">Σ(x−x̄)(y−ȳ)/(n−1)</span></td></tr>
+    <tr><td>Pearson r</td><td><span class="f">Σ(x−x̄)(y−ȳ) / √[Σ(x−x̄)²·Σ(y−ȳ)²]</span></td></tr>
+    <tr><td>Spearman ρ</td><td><span class="f">1 − 6Σd²/[n(n²−1)]</span></td></tr>
+    <tr><td>R²</td><td><span class="f">r²</span> (açıklanan yüzde)</td></tr>
+  </table></div>
+  <h3>Sınavda yapılacaklar</h3>
+  <ol class="step">
+    <li>Hesap sorusunda <b>önce veriyi sırala</b>.</li>
+    <li>"Örneklem" yazıyorsa <b>n − 1</b>, "evren / ana kitle / popülasyon" yazıyorsa <b>N</b>'e böl.</li>
+    <li>Çeyreklik ve yüzdelikte <b>(n+1)</b> kuralını kullan; konum küsuratlıysa iki komşunun ortalamasını al.</li>
+    <li>Gruplandırılmış medyanda <b>L = gerçek alt sınır</b> (54.5 gibi) ve <b>h'yi o sınıfın kendi genişliği</b> olarak al.</li>
+    <li>Pearson sorusunda <b>tabloyu kur</b>: x − x̄, y − ȳ, çarpım, kareler. Kısmi puan tablodan gelir.</li>
+    <li>Yorum sorusunda aşırı iddialı şıkları ele; "olabilir" diyen temkinli şıkkı seç.</li>
+    <li>Her sonucu bir cümleyle yorumla: "r = 0.83, güçlü pozitif doğrusal ilişki", "ortalama &gt; medyan, sağa çarpık" gibi.</li>
+  </ol>
+  <h3>Son kontrol: bunları biliyor musun?</h3>
+  <ul>
+    <li>☐ Kategorik veri → mod, çubuk/pasta. Sayısal veri → ortalama/medyan, histogram.</li>
+    <li>☐ Sağa çarpık → ortalama &gt; medyan.</li>
+    <li>☐ Sapmaların toplamı 0; n − 1 = Bessel düzeltmesi / serbestlik derecesi.</li>
+    <li>☐ +c → SS değişmez; ×c → SS ×c, varyans ×c².</li>
+    <li>☐ Standardizasyondan sonra ortalama 0, SS 1.</li>
+    <li>☐ Histogram bitişik, çubuk grafik boşluklu; histogramda alan önemli.</li>
+    <li>☐ r birimsiz; r = 0 ilişki yok değil, doğrusal ilişki yok; korelasyon nedensellik değil.</li>
+    <li>☐ Örnek sınav sorusu: medyan 63.25, en yoğun sınıf 55–59.</li>
+  </ul>
+  <p class="lead" style="margin-top:1em">Başarılar! 🍀</p>
+  <a class="top" href="#">↑ başa dön</a>
+</section>
+
+</main>
+
+<script>
+(function(){
+"use strict";
+/* ---------- tiny SVG helpers ---------- */
+const put=(id,s)=>{const e=document.getElementById(id); if(e) e.innerHTML=s;};
+const sc=(d0,d1,r0,r1)=>v=>r0+(v-d0)/(d1-d0)*(r1-r0);
+const r2=v=>Math.round(v*10)/10;
+const svg=(w,h,inner,label)=>'<svg viewBox="0 0 '+w+' '+h+'" role="img" aria-label="'+label+'">'+inner+'</svg>';
+const T=(x,y,s,cls,a)=>'<text x="'+r2(x)+'" y="'+r2(y)+'" class="'+(cls||'t')+'" text-anchor="'+(a||'middle')+'">'+s+'</text>';
+const Ln=(x1,y1,x2,y2,cls)=>'<line x1="'+r2(x1)+'" y1="'+r2(y1)+'" x2="'+r2(x2)+'" y2="'+r2(y2)+'" class="'+(cls||'ax')+'"/>';
+const Rc=(x,y,w,h,cls)=>'<rect x="'+r2(x)+'" y="'+r2(y)+'" width="'+r2(Math.max(0,w))+'" height="'+r2(Math.max(0,h))+'" class="'+cls+'"/>';
+const Ci=(x,y,r,cls)=>'<circle cx="'+r2(x)+'" cy="'+r2(y)+'" r="'+r+'" class="'+(cls||'dot')+'"/>';
+function rng(seed){return function(){seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+function gauss(r){let u=0,v=0;while(!u)u=r();while(!v)v=r();return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v);}
+
+/* bar chart (categorical, with gaps) */
+function barChart(id,cats,vals,max,label,yMin){
+  const W=360,H=210,L=36,R=12,Tp=14,B=34,ymin=yMin||0;
+  const y=sc(ymin,max,H-B,Tp), slot=(W-L-R)/cats.length, bw=slot*0.58;
+  let s='';
+  const step=(max-ymin)<=10?2:10;
+  for(let v=ymin;v<=max;v+=step){s+=Ln(L,y(v),W-R,y(v),'grid')+T(L-6,y(v)+3,v,'tm','end');}
+  cats.forEach((c,i)=>{const x=L+i*slot+(slot-bw)/2; s+=Rc(x,y(vals[i]),bw,y(ymin)-y(vals[i]),'bar')+T(x+bw/2,y(vals[i])-5,vals[i],'t')+T(x+bw/2,H-B+15,c,'t');});
+  s+=Ln(L,H-B,W-R,H-B,'ax');
+  return svg(W,H,s,label);
+}
+put('g-bar',barChart('g-bar',['VBA','YBS','İstatistik','Bilgisayar'],[42,35,28,25],50,'Bölümlere göre öğrenci sayısı çubuk grafiği'));
+(function(){
+  const W=360,H=200; let s='';
+  function mini(ox,ymin,title){
+    const L=ox+30,R=ox+165,Tp=30,B=H-30,y=sc(ymin,95,B,Tp);let p='';
+    p+=T((L+R)/2,16,title,'tb');
+    [ymin,ymin+((95-ymin)/2|0),95].forEach(v=>{p+=Ln(L,y(v),R,y(v),'grid')+T(L-5,y(v)+3,v,'tm','end');});
+    p+=Rc(L+18,y(92),40,B-y(92),'bar')+Rc(L+78,y(94),40,B-y(94),'bar2');
+    p+=T(L+38,y(92)-5,'92','t')+T(L+98,y(94)-5,'94','t');
+    p+=Ln(L,B,R,B,'ax');return p;}
+  s+=mini(0,0,'Eksen 0\'dan')+mini(180,90,'Eksen 90\'dan');
+  put('g-scale',svg(W,H,s,'Ölçek manipülasyonu karşılaştırması'));
+})();
+
+/* pie */
+(function(){
+  const data=[['Maliyet',55,'b1'],['Pazar',25,'b2'],['İşgücü',15,'b3'],['Fikrim yok',5,'barH']];
+  const cx=120,cy=105,r=85; let a0=-Math.PI/2, s='';
+  data.forEach(d=>{const a1=a0+d[1]/100*2*Math.PI; const large=(a1-a0)>Math.PI?1:0;
+    const x0=cx+r*Math.cos(a0),y0=cy+r*Math.sin(a0),x1=cx+r*Math.cos(a1),y1=cy+r*Math.sin(a1);
+    s+='<path d="M'+cx+' '+cy+' L'+r2(x0)+' '+r2(y0)+' A'+r+' '+r+' 0 '+large+' 1 '+r2(x1)+' '+r2(y1)+' Z" class="'+d[2]+'" style="stroke:var(--sheet);stroke-width:2"/>'; a0=a1;});
+  let ly=48; data.forEach(d=>{s+=Rc(232,ly-9,12,12,d[2])+T(250,ly+1,d[0]+' %'+d[1]+' ('+Math.round(d[1]*3.6)+'°)','t','start'); ly+=26;});
+  put('g-pie',svg(360,210,s,'Pasta grafik: maliyet 55, pazar 25, işgücü 15, fikrim yok 5'));
+})();
+
+/* histogram (equal width, adjacent) */
+function histo(edges,heights,opt){
+  const W=360,H=220,L=36,R=12,Tp=16,B=36; const max=opt.max;
+  const x=sc(edges[0],edges[edges.length-1],L,W-R), y=sc(0,max,H-B,Tp); let s='';
+  (opt.ticksY||[]).forEach(v=>{s+=Ln(L,y(v),W-R,y(v),'grid')+T(L-6,y(v)+3,v,'tm','end');});
+  heights.forEach((h,i)=>{s+=Rc(x(edges[i]),y(h),x(edges[i+1])-x(edges[i]),y(0)-y(h),opt.cls&&opt.cls[i]?opt.cls[i]:'barS'); if(opt.lab) s+=T((x(edges[i])+x(edges[i+1]))/2,y(h)-4,opt.lab[i],'t');});
+  (opt.xt||edges).forEach(v=>{s+=T(x(v),H-B+14,v,'tm');});
+  s+=Ln(L,H-B,W-R,H-B,'ax'); if(opt.xlabel) s+=T((L+W-R)/2,H-6,opt.xlabel,'tm');
+  return {s:s,W:W,H:H,x:x,y:y};
+}
+(function(){const e=[39.5,44.5,49.5,54.5,59.5,64.5,69.5,74.5,79.5], f=[3,5,7,10,11,8,4,2];
+  const h=histo(e,f,{max:12,ticksY:[0,4,8,12],lab:f,xt:e,xlabel:'puan (gerçek sınırlar)'});
+  put('g-hist',svg(h.W,h.H,h.s,'50 öğrencinin puan histogramı'));})();
+
+/* distribution shapes and skew panels */
+function betaPts(a,b){const pts=[];let mx=0;for(let i=0;i<=200;i++){const u=i/200;const v=(u<=0||u>=1)?0:Math.pow(u,a-1)*Math.pow(1-u,b-1);pts.push([u,v]);if(v>mx)mx=v;}
+  let tot=0;pts.forEach(p=>tot+=p[1]);let c=0,med=0.5;for(const p of pts){c+=p[1];if(c>=tot/2){med=p[0];break;}}
+  return {pts:pts,mx:mx,mode:(a-1)/(a+b-2),mean:a/(a+b),med:med};}
+function skewPanels(withMarks){
+  const W=360,H=withMarks?210:150; let s='';
+  const sets=[[2,5,'Sağa çarpık'],[4,4,'Simetrik'],[5,2,'Sola çarpık']];
+  sets.forEach((st,k)=>{
+    const ox=k*120, L=ox+10, R=ox+112, B=H-(withMarks?62:28), Tp=26; const d=betaPts(st[0],st[1]);
+    const x=sc(0,1,L,R), y=sc(0,d.mx,B,Tp);
+    let path='M'+r2(x(0))+' '+r2(B); d.pts.forEach(p=>path+=' L'+r2(x(p[0]))+' '+r2(y(p[1]))); path+=' L'+r2(x(1))+' '+r2(B)+' Z';
+    s+='<path d="'+path+'" class="area"/>';
+    let c='M'+r2(x(0))+' '+r2(y(0)); d.pts.forEach(p=>c+=' L'+r2(x(p[0]))+' '+r2(y(p[1]))); s+='<path d="'+c+'" class="curve"/>';
+    s+=Ln(L,B,R,B,'ax')+T((L+R)/2,14,st[2],'tb');
+    if(withMarks){
+      const marks=[['mod',d.mode,'Mo'],['med',d.med,'Me'],['mean',d.mean,'Ort']];
+      if(st[0]===st[1]){s+=Ln(x(0.5),Tp,x(0.5),B,'mk mean')+T(x(0.5),B+16,'Mo = Me = Ort','lbl mean');}
+      else marks.forEach((m,i)=>{s+=Ln(x(m[1]),Tp+4,x(m[1]),B,'mk '+m[0])+T(x(m[1]),B+14+i*13,m[2],'lbl '+m[0]);});
+    }
+  });
+  return svg(W,H,s,'Çarpıklık türleri');
+}
+put('g-shapes',skewPanels(false));
+put('g-skew',skewPanels(true));
+
+/* ogive */
+(function(){
+  const ub=[39.5,44.5,49.5,54.5,59.5,64.5,69.5,74.5,79.5], F=[0,3,8,15,25,36,44,48,50];
+  const W=360,H=220,L=36,R=14,Tp=14,B=36; const x=sc(39.5,79.5,L,W-R), y=sc(0,50,H-B,Tp); let s='';
+  [0,10,20,25,30,40,50].forEach(v=>{s+=Ln(L,y(v),W-R,y(v),'grid')+T(L-6,y(v)+3,v,'tm','end');});
+  s+=Ln(L,y(25),x(59.5),y(25),'dash')+Ln(x(59.5),y(25),x(59.5),H-B,'dash');
+  let p='M'+r2(x(ub[0]))+' '+r2(y(F[0])); ub.forEach((u,i)=>p+=' L'+r2(x(u))+' '+r2(y(F[i]))); s+='<path d="'+p+'" class="curve"/>';
+  ub.forEach((u,i)=>{s+=Ci(x(u),y(F[i]),3.5)+T(x(u),H-B+14,u,'tm');});
+  s+=T(x(59.5)+4,y(25)-6,'n/2 = 25 → medyan ≈ 59.5','lbl mean','start');
+  s+=Ln(L,H-B,W-R,H-B,'ax')+T((L+W-R)/2,H-6,'sınıf üst sınırı','tm');
+  put('g-ogive',svg(W,H,s,'Birikimli frekans grafiği (ogiv)'));
+})();
+
+/* mean vs median number line */
+(function(){
+  const data=[20,22,25,28,300], W=360,H=150,L=20,R=20,y0=104; const x=sc(0,320,L,W-R); let s='';
+  s+=Ln(L,y0,W-R,y0,'ax'); [0,50,100,150,200,250,300].forEach(t=>{s+=Ln(x(t),y0,x(t),y0+5,'ax')+T(x(t),y0+18,t,'tm');});
+  data.forEach(v=>s+=Ci(x(v),y0-8,5.5,v===300?'dot2':'dot'));
+  s+=Ln(x(25),36,x(25),y0-15,'mk med')+T(x(25)+4,40,'Medyan 25','lbl med','start');
+  s+=Ln(x(79),62,x(79),y0-15,'mk mean')+T(x(79)+4,66,'Ortalama 79','lbl mean','start');
+  s+=T(x(300),y0-20,'aykırı','tm');
+  s+=T((L+W-R)/2,H-6,'maaş (bin TL)','tm');
+  put('g-meanmed',svg(W,H,s,'Ortalama aykırı değere çekiliyor, medyan sabit'));
+})();
+
+/* two groups same mean, different spread */
+(function(){
+  const W=360,H=170,L=24,R=16; const x=sc(25,75,L,W-R); let s='';
+  const rows=[['Düşük yayılım',[47,49,50,51,53],50],['Yüksek yayılım',[30,40,50,60,70],120]];
+  rows.forEach(rw=>{const y=rw[2]; s+=T(L,y-26,rw[0],'tb','start')+Ln(L,y,W-R,y,'ax'); rw[1].forEach(v=>s+=Ci(x(v),y-8,5.5)); s+=Ln(x(50),y-22,x(50),y+4,'mk mean');});
+  [30,40,50,60,70].forEach(t=>s+=T(x(t),H-8,t,'tm'));
+  s+=T(x(50)+4,26,'ortalama = 50','lbl mean','start');
+  put('g-spread',svg(W,H,s,'Aynı ortalama, farklı yayılım'));
+})();
+
+/* boxplot */
+(function(){
+  const W=360,H=140,L=24,R=16; const x=sc(0,500,L,W-R), yc=62; let s='';
+  const mn=30,q1=115.5,md=207,q3=243.5,wh=384,out=470,fence=435.5;
+  s+=Ln(x(mn),yc,x(q1),yc,'whisk')+Ln(x(q3),yc,x(wh),yc,'whisk')+Ln(x(mn),yc-12,x(mn),yc+12,'whisk')+Ln(x(wh),yc-12,x(wh),yc+12,'whisk');
+  s+=Rc(x(q1),yc-22,x(q3)-x(q1),44,'box')+Ln(x(md),yc-22,x(md),yc+22,'mk med');
+  s+=Ci(x(out),yc,5,'out')+Ln(x(fence),yc-30,x(fence),yc+30,'dash');
+  s+=T(x(fence),yc-34,'üst sınır 435.5','lbl mean');
+  s+=T(x(out),yc+20,'470','t')+T(x(q1),yc+36,'Q1 115.5','t')+T(x(md),yc-28,'Medyan 207','lbl med')+T(x(q3)+4,yc+36,'Q3 243.5','t','start')+T(x(mn),yc+28,'30','t')+T(x(wh),yc+28,'384','t');
+  s+=Ln(L,H-24,W-R,H-24,'ax'); [0,100,200,300,400,500].forEach(t=>s+=T(x(t),H-10,t,'tm'));
+  put('g-box',svg(W,H,s,'Kutu grafik, aykırı değer 470'));
+})();
+
+/* variance squares */
+(function(){
+  const W=360,H=230,L=30,R=20,y0=130; const x=sc(0,10,L,W-R); let s='';
+  s+=Ln(L,y0,W-R,y0,'ax'); for(let t=0;t<=10;t++){s+=Ln(x(t),y0,x(t),y0+4,'ax');}
+  [2,4,6,8].forEach(v=>{const d=v-5, side=Math.abs(d)*(x(1)-x(0)); const sx=d<0?x(v):x(5); const sy=Math.abs(d)>1?y0-side:y0; s+=Rc(sx,sy,side,side,'sq')+T(sx+side/2,sy+side/2+4,'('+(d>0?'+':'')+d+')² = '+d*d,'tm');});
+  s+=Ln(x(5),20,x(5),y0+40,'mk mean')+T(x(5),16,'x̄ = 5','lbl mean');
+  [2,4,6,8].forEach(v=>s+=Ci(x(v),y0,5)+T(x(v),y0-8,v,'t'));
+  s+=T((L+W-R)/2,H-26,'9 + 1 + 1 + 9 = 20','t')+T((L+W-R)/2,H-8,'s² = 20 / 3 ≈ 6.67','lbl mean');
+  put('g-var',svg(W,H,s,'Sapmaların kareleri'));
+})();
+
+/* normal curve */
+(function(){
+  const W=360,H=210,L=16,R=16,B=170,Tp=20; const x=sc(-3.6,3.6,L,W-R); const pdf=z=>Math.exp(-z*z/2); const y=sc(0,1,B,Tp); let s='';
+  function band(a,b,cls){let p='M'+r2(x(a))+' '+B; for(let z=a;z<=b+1e-9;z+=0.05)p+=' L'+r2(x(z))+' '+r2(y(pdf(z))); p+=' L'+r2(x(b))+' '+B+' Z'; return '<path d="'+p+'" class="'+cls+'"/>';}
+  s+=band(-3,3,'b3')+band(-2,2,'b2')+band(-1,1,'b1');
+  let c='M'+r2(x(-3.6))+' '+r2(y(pdf(-3.6))); for(let z=-3.6;z<=3.6;z+=0.05)c+=' L'+r2(x(z))+' '+r2(y(pdf(z))); s+='<path d="'+c+'" class="curve" style="stroke:var(--ink)"/>';
+  s+=Ln(L,B,W-R,B,'ax');
+  ['−3σ','−2σ','−1σ','μ','+1σ','+2σ','+3σ'].forEach((l,i)=>{const z=i-3; s+=Ln(x(z),B,x(z),B+4,'ax')+T(x(z),B+16,l,'tm');});
+  s+=T(x(0),y(0.45),'%68','tb')+T(x(-1.5),y(0.1)+4,'%95','t')+T(x(1.5),y(0.1)+4,'%95','t')+T(x(-3),y(0.3),'%99.7','tm')+T(x(3),y(0.3),'%99.7','tm');
+  put('g-normal',svg(W,H,s,'Normal dağılım 68-95-99.7'));
+})();
+
+/* grouped median interpolation */
+(function(){
+  const W=360,H=200,L=20,R=20; let s='';
+  const x=sc(0,49,L,W-R); const y1=46;
+  s+=T(L,20,'1) Kişiler (n = 49), n/2 = 24.5','tb','start');
+  s+=Rc(x(0),y1,x(15)-x(0),26,'bar')+Rc(x(15),y1,x(25)-x(15),26,'barH')+Rc(x(25),y1,x(49)-x(25),26,'barS');
+  s+=T((x(0)+x(15))/2,y1+17,'önceki 15','t" style="fill:var(--sheet)')+T((x(15)+x(25))/2,y1+17,'sınıf 10','t')+T((x(25)+x(49))/2,y1+17,'sonraki 24','t');
+  s+=Ln(x(24.5),y1-8,x(24.5),y1+34,'mk mean')+T(x(24.5),y1+46,'24.5','lbl mean');
+  const x2=sc(54.5,59.5,L,W-R), y2=140;
+  s+=T(L,y2-16,'2) Sınıfın içi: 54.5 → 59.5 (h = 5)','tb','start');
+  s+=Rc(x2(54.5),y2,x2(59.25)-x2(54.5),26,'barH')+Rc(x2(59.25),y2,x2(59.5)-x2(59.25),26,'barS');
+  s+=T((x2(54.5)+x2(59.25))/2,y2+17,'9.5 / 10 = %95 → 4.75 puan','t');
+  s+=Ln(x2(59.25),y2-6,x2(59.25),y2+34,'mk mean')+T(x2(59.25)-2,y2+46,'medyan 59.25','lbl mean','end');
+  s+=T(x2(54.5),y2+46,'54.5','tm','start');
+  put('g-gmed',svg(W,H,s,'Gruplandırılmış medyan interpolasyonu'));
+})();
+
+/* unequal widths: wrong vs right */
+(function(){
+  const e=[39.5,44.5,54.5,59.5,74.5,79.5,89.5,99.5], f=[3,8,9,18,5,4,2], h=[5,10,5,15,5,10,10];
+  const W=360,H=210; let s='';
+  function panel(ox,vals,max,title,hiIdx){
+    const L=ox+26,R=ox+172,Tp=30,B=H-30; const x=sc(39.5,99.5,L,R), y=sc(0,max,B,Tp); let p=T((L+R)/2,16,title,'tb');
+    vals.forEach((v,i)=>{p+=Rc(x(e[i]),y(v),x(e[i+1])-x(e[i]),B-y(v),i===hiIdx?'barH':'barS');});
+    [40,60,80,100].forEach(t=>p+=T(x(t),B+14,t,'tm')); p+=Ln(L,B,R,B,'ax'); return p;}
+  s+=panel(0,f,18,'Yanlış: yükseklik = f',3);
+  s+=panel(180,f.map((v,i)=>v/h[i]),1.8,'Doğru: yükseklik = f/h',2);
+  put('g-unequal',svg(W,H,s,'Eşit olmayan sınıf genişliği histogramı'));
+})();
+
+/* scatter panels */
+(function(){
+  const W=360,H=200; let s=''; const r=rng(7);
+  const sets=[['Pozitif (r ≈ +0.9)',i=>[i,i+gauss(r)*1.2]],['Negatif (r ≈ −0.9)',i=>[i,10-i+gauss(r)*1.2]],['İlişkisiz (r ≈ 0)',i=>[r()*10,r()*10]],['U şekli (r ≈ 0)',i=>[i,Math.pow(i-5,2)/2.5+gauss(r)*0.5]]];
+  sets.forEach((st,k)=>{
+    const col=k%2,row=k>>1, ox=col*180, oy=row*100; const L=ox+14,R=ox+170,Tp=oy+22,B=oy+92;
+    const x=sc(-0.5,10.5,L,R), y=sc(-1.5,11.5,B,Tp);
+    s+=T((L+R)/2,oy+14,st[0],'tb')+Ln(L,B,R,B,'ax')+Ln(L,B,L,Tp,'ax');
+    for(let i=0;i<=10;i+=0.5){const p=st[1](i); const py=Math.max(-1.2,Math.min(11.2,p[1])); s+=Ci(x(p[0]),y(py),2.4);}
+  });
+  put('g-scatter',svg(W,H,s,'Saçılım grafiği türleri'));
+})();
+
+/* covariance quadrants */
+(function(){
+  const X=[1,2,3,4,5],Y=[2,3,5,4,6]; const W=360,H=230,L=36,R=16,Tp=14,B=196; const x=sc(0,6,L,W-R), y=sc(1,7,B,Tp); let s='';
+  s+=Rc(x(3),y(7),x(6)-x(3),y(4)-y(7),'posq')+Rc(x(0),y(4),x(3)-x(0),y(1)-y(4),'posq')+Rc(x(0),y(7),x(3)-x(0),y(4)-y(7),'negq')+Rc(x(3),y(4),x(6)-x(3),y(1)-y(4),'negq');
+  s+=T(x(4.6),y(6.7),'+ katkı','lbl med')+T(x(1.2),y(1.5),'+ katkı','lbl med')+T(x(1.2),y(6.7),'− katkı','t" style="fill:var(--bad)')+T(x(4.6),y(1.5),'− katkı','t" style="fill:var(--bad)');
+  s+=Ln(x(3),Tp,x(3),B,'dash')+Ln(L,y(4),W-R,y(4),'dash')+T(x(3)+4,Tp+10,'x̄ = 3','lbl mean','start')+T(W-R-2,y(4)-5,'ȳ = 4','lbl mean','end');
+  X.forEach((v,i)=>{s+=Ci(x(v),y(Y[i]),5)+T(x(v)+8,y(Y[i])-7,'('+v+','+Y[i]+')','tm','start');});
+  s+=Ln(L,B,W-R,B,'ax')+Ln(L,B,L,Tp,'ax'); [1,2,3,4,5].forEach(t=>s+=T(x(t),B+14,t,'tm')); [2,4,6].forEach(t=>s+=T(L-6,y(t)+3,t,'tm','end'));
+  put('g-quad',svg(W,H,s,'Kovaryans dört bölge'));
+})();
+
+/* U shape exact */
+(function(){
+  const W=360,H=200,L=36,R=16,Tp=14,B=170; const x=sc(-3.5,3.5,L,W-R), y=sc(0,10,B,Tp); let s='';
+  let c=''; for(let z=-3.2;z<=3.2;z+=0.1)c+=(c?' L':'M')+r2(x(z))+' '+r2(y(z*z)); s+='<path d="'+c+'" class="dash" style="stroke:var(--muted)"/>';
+  [-3,-2,-1,0,1,2,3].forEach(v=>{s+=Ci(x(v),y(v*v),5)+T(x(v),B+14,v,'tm');});
+  [0,4,9].forEach(t=>s+=T(L-6,y(t)+3,t,'tm','end')); s+=Ln(L,B,W-R,B,'ax')+Ln(L,B,L,Tp,'ax');
+  s+=T(x(0),y(8.5),'Pearson r = 0','lbl mean')+T(x(0),y(7.2),'ama Y = X² kesin ilişki','t');
+  put('g-u',svg(W,H,s,'Y eşittir X kare, r sıfır'));
+})();
+
+/* reading progress */
+const bar=document.getElementById('progress');
+function prog(){const h=document.documentElement; const p=h.scrollTop/(h.scrollHeight-h.clientHeight||1); bar.style.width=Math.min(100,Math.max(0,p*100))+'%';}
+window.addEventListener('scroll',prog,{passive:true}); prog();
+})();
+</script>
+</body>
+</html>
